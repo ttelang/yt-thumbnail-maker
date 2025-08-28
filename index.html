@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Thumbnail Generator</title>
+    <style>
+        :root {
+            --bg0: #1a1a2e;
+            --bg1: #16213e;
+            --primary: #ffffff;
+            --accent: #ff6b6b;
+            --pill: #4ecdc4;
+            --tagText: #ffffff;
+            
+            --ui-bg: #1a1a1a;
+            --ui-surface: #2a2a2a;
+            --ui-border: #404040;
+            --ui-text: #ffffff;
+            --ui-text-dim: #cccccc;
+            --ui-primary: #3b82f6;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--ui-bg);
+            color: var(--ui-text);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .controls {
+            background: var(--ui-surface);
+            border: 1px solid var(--ui-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 24px;
+        }
+
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .control-section h3 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ui-text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            color: var(--ui-text-dim);
+            font-weight: 500;
+        }
+
+        .input-group input, .input-group select {
+            padding: 8px 12px;
+            border: 1px solid var(--ui-border);
+            border-radius: 6px;
+            background: var(--ui-bg);
+            color: var(--ui-text);
+            font-size: 14px;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: var(--ui-primary);
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .color-input {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .color-input label {
+            font-size: 11px;
+            color: var(--ui-text-dim);
+        }
+
+        .color-input input[type="color"] {
+            width: 100%;
+            height: 32px;
+            border: 1px solid var(--ui-border);
+            border-radius: 4px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .preset-btn {
+            padding: 6px 8px;
+            border: 1px solid var(--ui-border);
+            border-radius: 4px;
+            background: var(--ui-bg);
+            color: var(--ui-text-dim);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--ui-primary);
+            color: var(--ui-text);
+        }
+
+        .update-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .update-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--ui-primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .update-btn:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .update-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .status {
+            font-size: 12px;
+            color: #fbbf24;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .status.visible {
+            opacity: 1;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .export-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--ui-border);
+            border-radius: 6px;
+            background: var(--ui-surface);
+            color: var(--ui-text);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .export-btn:hover {
+            border-color: var(--ui-primary);
+            background: var(--ui-bg);
+        }
+
+        .canvas-container {
+            background: var(--ui-surface);
+            border: 1px solid var(--ui-border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .svg-wrapper {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        #thumb {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .color-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>YouTube Thumbnail Generator</h1>
+        </div>
+
+        <div class="controls">
+            <div class="control-section">
+                <h3>Content</h3>
+                <div class="input-group">
+                    <label for="titleInput">Title</label>
+                    <input type="text" id="titleInput" placeholder="Your Video Title" value="Create Amazing Content">
+                </div>
+                <div class="input-group">
+                    <label for="subtitleInput">Subtitle</label>
+                    <input type="text" id="subtitleInput" placeholder="Subtitle or description" value="Step by step tutorial">
+                </div>
+                <div class="input-group">
+                    <label for="tagInput">Tag / Category</label>
+                    <input type="text" id="tagInput" placeholder="NEW" value="TUTORIAL">
+                </div>
+                <div class="input-group">
+                    <label for="brandInput">Brand / Channel</label>
+                    <input type="text" id="brandInput" placeholder="Your Channel" value="YourChannel">
+                </div>
+                <div class="input-group">
+                    <label for="layoutSelect">Layout</label>
+                    <select id="layoutSelect">
+                        <option value="a">Layout A - Left Accent Bar</option>
+                        <option value="b" selected>Layout B - Centered Title</option>
+                        <option value="c">Layout C - Split Bands</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Colors</h3>
+                <div class="color-grid">
+                    <div class="color-input">
+                        <label>BG Start</label>
+                        <input type="color" id="bg0Color" value="#1a1a2e">
+                    </div>
+                    <div class="color-input">
+                        <label>BG End</label>
+                        <input type="color" id="bg1Color" value="#16213e">
+                    </div>
+                    <div class="color-input">
+                        <label>Primary</label>
+                        <input type="color" id="primaryColor" value="#ffffff">
+                    </div>
+                    <div class="color-input">
+                        <label>Accent</label>
+                        <input type="color" id="accentColor" value="#ff6b6b">
+                    </div>
+                    <div class="color-input">
+                        <label>Pill</label>
+                        <input type="color" id="pillColor" value="#4ecdc4">
+                    </div>
+                    <div class="color-input">
+                        <label>Tag Text</label>
+                        <input type="color" id="tagTextColor" value="#ffffff">
+                    </div>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-preset="cool">Cool</button>
+                    <button class="preset-btn" data-preset="indigo">Indigo</button>
+                    <button class="preset-btn" data-preset="cyan">Cyan</button>
+                    <button class="preset-btn" data-preset="teal">Teal</button>
+                    <button class="preset-btn" data-preset="rose">Rose</button>
+                    <button class="preset-btn" data-preset="amber">Amber</button>
+                </div>
+                <button class="preset-btn" data-preset="random">Randomize</button>
+            </div>
+
+            <div class="control-section">
+                <h3>Generate</h3>
+                <div class="update-section">
+                    <button class="update-btn" id="updateBtn">Update Thumbnail</button>
+                    <div class="status" id="status">Changes pending...</div>
+                    <div class="export-buttons">
+                        <button class="export-btn" id="exportSvg">Export SVG</button>
+                        <button class="export-btn" id="exportPng">Export PNG</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <div class="svg-wrapper">
+                <svg id="thumb" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="var(--bg0)" />
+                            <stop offset="100%" stop-color="var(--bg1)" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Background -->
+                    <rect width="1280" height="720" fill="url(#bgGradient)" />
+                    
+                    <!-- Safe Area Container -->
+                    <g transform="translate(60,60)">
+                        
+                        <!-- Layout A: Left Accent Bar -->
+                        <g id="layout-a" style="display: none;">
+                            <!-- Accent Bar -->
+                            <rect x="0" y="0" width="8" height="600" fill="var(--accent)" rx="4" />
+                            
+                            <!-- Title -->
+                            <text id="title-a" x="40" y="120" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui">Create Amazing Content</text>
+                            
+                            <!-- Subtitle -->
+                            <text id="subtitle-a" x="40" y="180" fill="var(--primary)" font-size="32" opacity="0.8" font-family="system-ui">Step by step tutorial</text>
+                            
+                            <!-- Brand -->
+                            <text id="brand-a" x="40" y="560" fill="var(--primary)" font-size="24" opacity="0.6" font-family="system-ui">YourChannel</text>
+                            
+                            <!-- Tag Pill -->
+                            <rect id="tagPill-a" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
+                            <text id="tag-a" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                        </g>
+                        
+                        <!-- Layout B: Centered Title (Default) -->
+                        <g id="layout-b">
+                            <!-- Title -->
+                            <text id="title-b" x="580" y="200" fill="var(--primary)" font-size="80" font-weight="700" text-anchor="middle" font-family="system-ui">Create Amazing Content</text>
+                            
+                            <!-- Title Underline -->
+                            <rect id="titleUnderline-b" x="200" y="220" width="760" height="6" fill="var(--accent)" rx="3" />
+                            
+                            <!-- Subtitle -->
+                            <text id="subtitle-b" x="580" y="280" fill="var(--primary)" font-size="36" text-anchor="middle" opacity="0.8" font-family="system-ui">Step by step tutorial</text>
+                            
+                            <!-- Brand -->
+                            <text id="brand-b" x="580" y="540" fill="var(--primary)" font-size="24" text-anchor="middle" opacity="0.6" font-family="system-ui">YourChannel</text>
+                            
+                            <!-- Tag Pill -->
+                            <rect id="tagPill-b" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
+                            <text id="tag-b" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                        </g>
+                        
+                        <!-- Layout C: Split Bands -->
+                        <g id="layout-c" style="display: none;">
+                            <!-- Background Star -->
+                            <text x="900" y="350" fill="var(--accent)" font-size="200" opacity="0.1" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">★</text>
+                            
+                            <!-- Horizontal Band -->
+                            <rect x="0" y="250" width="1160" height="200" fill="var(--accent)" opacity="0.15" rx="8" />
+                            
+                            <!-- Title -->
+                            <text id="title-c" x="40" y="180" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui">Create Amazing Content</text>
+                            
+                            <!-- Subtitle -->
+                            <text id="subtitle-c" x="40" y="350" fill="var(--primary)" font-size="32" opacity="0.9" font-family="system-ui">Step by step tutorial</text>
+                            
+                            <!-- Brand -->
+                            <text id="brand-c" x="40" y="560" fill="var(--primary)" font-size="24" opacity="0.6" font-family="system-ui">YourChannel</text>
+                            
+                            <!-- Tag Pill -->
+                            <rect id="tagPill-c" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
+                            <text id="tag-c" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                        </g>
+                        
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let dirty = false;
+        let currentLayout = 'b';
+        
+        // Palettes
+        const palettes = {
+            cool: ['#0f172a', '#1e293b', '#ffffff', '#38bdf8', '#06b6d4', '#ffffff'],
+            indigo: ['#1e1b4b', '#312e81', '#ffffff', '#6366f1', '#8b5cf6', '#ffffff'],
+            cyan: ['#164e63', '#155e75', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
+            teal: ['#134e4a', '#115e59', '#ffffff', '#14b8a6', '#0d9488', '#ffffff'],
+            rose: ['#4c1d24', '#881337', '#ffffff', '#f43f5e', '#e11d48', '#ffffff'],
+            amber: ['#451a03', '#92400e', '#ffffff', '#f59e0b', '#d97706', '#ffffff']
+        };
+        
+        // Elements
+        const titleInput = document.getElementById('titleInput');
+        const subtitleInput = document.getElementById('subtitleInput');
+        const tagInput = document.getElementById('tagInput');
+        const brandInput = document.getElementById('brandInput');
+        const layoutSelect = document.getElementById('layoutSelect');
+        const updateBtn = document.getElementById('updateBtn');
+        const status = document.getElementById('status');
+        
+        // Color inputs
+        const colorInputs = {
+            bg0: document.getElementById('bg0Color'),
+            bg1: document.getElementById('bg1Color'),
+            primary: document.getElementById('primaryColor'),
+            accent: document.getElementById('accentColor'),
+            pill: document.getElementById('pillColor'),
+            tagText: document.getElementById('tagTextColor')
+        };
+        
+        // Set dirty state
+        function setDirty(isDirty) {
+            dirty = isDirty;
+            updateBtn.disabled = !dirty;
+            status.classList.toggle('visible', dirty);
+        }
+        
+        // Apply CSS variables
+        function applyCSSVariables() {
+            const root = document.documentElement;
+            Object.entries(colorInputs).forEach(([key, input]) => {
+                root.style.setProperty(`--${key}`, input.value);
+            });
+        }
+        
+        // Get text width
+        function getTextWidth(text, fontSize, fontWeight = 'normal') {
+            const svg = document.querySelector('#thumb');
+            const textEl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            textEl.setAttribute('font-size', fontSize);
+            textEl.setAttribute('font-weight', fontWeight);
+            textEl.setAttribute('font-family', 'system-ui');
+            textEl.setAttribute('visibility', 'hidden');
+            textEl.textContent = text;
+            svg.appendChild(textEl);
+            const width = textEl.getComputedTextLength();
+            svg.removeChild(textEl);
+            return width;
+        }
+        
+        // Auto-fit title
+        function autofitTitle(layout) {
+            const titleEl = document.getElementById(`title-${layout}`);
+            const title = titleInput.value;
+            let fontSize = layout === 'b' ? 80 : 72;
+            const minFontSize = 32;
+            const maxWidth = layout === 'b' ? 920 : layout === 'a' ? 1120 : 1120;
+            
+            while (fontSize > minFontSize) {
+                const width = getTextWidth(title, fontSize, '700');
+                if (width <= maxWidth) break;
+                fontSize -= 2;
+            }
+            
+            titleEl.setAttribute('font-size', fontSize);
+            
+            // Update underline width for Layout B
+            if (layout === 'b') {
+                const underline = document.getElementById('titleUnderline-b');
+                const titleWidth = getTextWidth(title, fontSize, '700');
+                const underlineWidth = Math.min(Math.max(titleWidth, 200), 760);
+                const underlineX = 580 - underlineWidth / 2;
+                underline.setAttribute('x', underlineX);
+                underline.setAttribute('width', underlineWidth);
+            }
+        }
+        
+        // Update pill size and position
+        function updatePill(layout) {
+            const tag = tagInput.value || 'TAG';
+            const pillEl = document.getElementById(`tagPill-${layout}`);
+            const tagEl = document.getElementById(`tag-${layout}`);
+            
+            // Measure text
+            const textWidth = getTextWidth(tag, 18, '600');
+            const pillWidth = textWidth + 32; // 16px padding on each side
+            const pillHeight = 40;
+            const pillX = 1160 - pillWidth; // Right-align to safe area
+            const pillY = 40;
+            
+            // Update pill
+            pillEl.setAttribute('x', pillX);
+            pillEl.setAttribute('width', pillWidth);
+            
+            // Center text in pill
+            const textX = pillX + pillWidth / 2;
+            const textY = pillY + pillHeight / 2;
+            
+            tagEl.setAttribute('x', textX);
+            tagEl.setAttribute('y', textY);
+            tagEl.textContent = tag;
+        }
+        
+        // Update layout visibility
+        function updateLayoutVisibility() {
+            ['a', 'b', 'c'].forEach(layout => {
+                const el = document.getElementById(`layout-${layout}`);
+                el.style.display = layout === currentLayout ? 'block' : 'none';
+            });
+        }
+        
+        // Update content
+        function updateContent() {
+            const title = titleInput.value;
+            const subtitle = subtitleInput.value;
+            const brand = brandInput.value;
+            
+            ['a', 'b', 'c'].forEach(layout => {
+                document.getElementById(`title-${layout}`).textContent = title;
+                document.getElementById(`subtitle-${layout}`).textContent = subtitle;
+                document.getElementById(`brand-${layout}`).textContent = brand;
+            });
+        }
+        
+        // Main update function
+        function update() {
+            applyCSSVariables();
+            updateContent();
+            updateLayoutVisibility();
+            
+            // Update title sizing and pill for current layout
+            autofitTitle(currentLayout);
+            updatePill(currentLayout);
+            
+            setDirty(false);
+        }
+        
+        // Export functions
+        function exportSVG() {
+            const svg = document.getElementById('thumb');
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svg);
+            
+            // Add CSS variables to the SVG
+            const style = document.createElement('style');
+            const root = document.documentElement;
+            const cssVars = [
+                `--bg0: ${root.style.getPropertyValue('--bg0') || colorInputs.bg0.value}`,
+                `--bg1: ${root.style.getPropertyValue('--bg1') || colorInputs.bg1.value}`,
+                `--primary: ${root.style.getPropertyValue('--primary') || colorInputs.primary.value}`,
+                `--accent: ${root.style.getPropertyValue('--accent') || colorInputs.accent.value}`,
+                `--pill: ${root.style.getPropertyValue('--pill') || colorInputs.pill.value}`,
+                `--tagText: ${root.style.getPropertyValue('--tagText') || colorInputs.tagText.value}`
+            ].join('; ');
+            
+            svgString = svgString.replace('<svg', `<svg><defs><style>:root { ${cssVars}; }</style></defs><svg`);
+            
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'thumbnail.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function exportPNG() {
+            const svg = document.getElementById('thumb');
+            const canvas = document.createElement('canvas');
+            canvas.width = 1280;
+            canvas.height = 720;
+            const ctx = canvas.getContext('2d');
+            
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svg);
+            
+            // Inline styles
+            const root = document.documentElement;
+            const cssVars = {
+                '--bg0': root.style.getPropertyValue('--bg0') || colorInputs.bg0.value,
+                '--bg1': root.style.getPropertyValue('--bg1') || colorInputs.bg1.value,
+                '--primary': root.style.getPropertyValue('--primary') || colorInputs.primary.value,
+                '--accent': root.style.getPropertyValue('--accent') || colorInputs.accent.value,
+                '--pill': root.style.getPropertyValue('--pill') || colorInputs.pill.value,
+                '--tagText': root.style.getPropertyValue('--tagText') || colorInputs.tagText.value
+            };
+            
+            Object.entries(cssVars).forEach(([variable, value]) => {
+                const regex = new RegExp(`var\\(${variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`, 'g');
+                svgString = svgString.replace(regex, value);
+            });
+            
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, 1280, 720);
+                canvas.toBlob(function(blob) {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'thumbnail.png';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
+            };
+            
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+        }
+        
+        // Event listeners
+        [titleInput, subtitleInput, tagInput, brandInput].forEach(input => {
+            input.addEventListener('input', () => setDirty(true));
+        });
+        
+        layoutSelect.addEventListener('change', (e) => {
+            currentLayout = e.target.value;
+            setDirty(true);
+        });
+        
+        Object.values(colorInputs).forEach(input => {
+            input.addEventListener('input', () => setDirty(true));
+        });
+        
+        // Preset buttons
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const preset = btn.dataset.preset;
+                let colors;
+                
+                if (preset === 'random') {
+                    const presetNames = Object.keys(palettes);
+                    const randomPreset = presetNames[Math.floor(Math.random() * presetNames.length)];
+                    colors = palettes[randomPreset];
+                } else {
+                    colors = palettes[preset];
+                }
+                
+                if (colors) {
+                    const colorKeys = ['bg0', 'bg1', 'primary', 'accent', 'pill', 'tagText'];
+                    colors.forEach((color, index) => {
+                        colorInputs[colorKeys[index]].value = color;
+                    });
+                    setDirty(true);
+                }
+            });
+        });
+        
+        updateBtn.addEventListener('click', update);
+        document.getElementById('exportSvg').addEventListener('click', exportSVG);
+        document.getElementById('exportPng').addEventListener('click', exportPNG);
+        
+        // Initialize
+        update();
+    </script>
+</body>
+</html>
