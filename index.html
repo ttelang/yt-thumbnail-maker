@@ -21,16 +21,19 @@
             <div class="control-section">
                 <h3>Content</h3>
                 <div class="input-group">
-                    <label for="titleInput">Title</label>
-                    <input type="text" id="titleInput" placeholder="Your Video Title" value="Create Amazing Content">
+                    <label for="titleInput">Title <span class="char-counter" id="titleCounter">(20/40)</span></label>
+                    <input type="text" id="titleInput" placeholder="Your Video Title" value="Create Amazing Content" maxlength="40">
+                    <small class="text-tip">Keep it short and impactful. Ideal: 20-40 characters</small>
                 </div>
                 <div class="input-group">
-                    <label for="subtitleInput">Subtitle</label>
-                    <input type="text" id="subtitleInput" placeholder="Subtitle or description" value="Step by step tutorial">
+                    <label for="subtitleInput">Subtitle <span class="char-counter" id="subtitleCounter">(21/60)</span></label>
+                    <input type="text" id="subtitleInput" placeholder="Subtitle or description" value="Step by step tutorial" maxlength="60">
+                    <small class="text-tip">Add urgency or curiosity. Max: 60 characters</small>
                 </div>
                 <div class="input-group">
-                    <label for="tagInput">Tag / Category</label>
-                    <input type="text" id="tagInput" placeholder="NEW" value="TUTORIAL">
+                    <label for="tagInput">Tag / Category <span class="char-counter" id="tagCounter">(8/12)</span></label>
+                    <input type="text" id="tagInput" placeholder="NEW" value="TUTORIAL" maxlength="12">
+                    <small class="text-tip">ONE powerful word. Max: 12 characters</small>
                 </div>
                 <div class="input-group">
                     <label for="brandInput">Brand / Channel</label>
@@ -42,11 +45,56 @@
                         <option value="a">Layout A - Left Accent Bar</option>
                         <option value="b" selected>Layout B - Centered Title</option>
                         <option value="c">Layout C - Split Bands</option>
+                        <option value="d">Layout D - Urgency Alert</option>
                     </select>
                 </div>
                 <div class="input-group font-size-group">
                     <label for="fontSizeSlider">Font Size: <span id="fontSizeValue">0</span></label>
                     <input type="range" id="fontSizeSlider" min="-20" max="20" value="0" step="1" class="font-size-slider">
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3>Visual Elements</h3>
+                <div class="visual-elements">
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showArrow">
+                        <label for="showArrow">Arrow</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showStar">
+                        <label for="showStar">Star</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showCheckmark">
+                        <label for="showCheckmark">Checkmark</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showExclamation">
+                        <label for="showExclamation">!</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showFire">
+                        <label for="showFire">Fire</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showLightning">
+                        <label for="showLightning">Lightning</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="elementSizeSlider">Element Size: <span id="elementSizeValue">100</span>%</label>
+                    <input type="range" id="elementSizeSlider" min="50" max="200" value="100" step="10" class="element-size-slider">
+                </div>
+                <div class="input-group">
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showDrama">
+                        <label for="showDrama">Dramatic Spotlight</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showTextShadow">
+                        <label for="showTextShadow">Text Shadows</label>
+                    </div>
                 </div>
             </div>
 
@@ -95,6 +143,12 @@
                     <button class="preset-btn" data-preset="gold">Gold</button>
                     <button class="preset-btn" data-preset="midnight">Midnight</button>
                     <button class="preset-btn" data-preset="volcano">Volcano</button>
+                    <button class="preset-btn" data-preset="urgent">Urgent</button>
+                    <button class="preset-btn" data-preset="shock">Shock</button>
+                    <button class="preset-btn" data-preset="warning">Warning</button>
+                    <button class="preset-btn" data-preset="success">Success</button>
+                    <button class="preset-btn" data-preset="viral">Viral</button>
+                    <button class="preset-btn" data-preset="mystery">Mystery</button>
                 </div>
                 <button class="preset-btn" data-preset="random">Randomize</button>
             </div>
@@ -121,10 +175,29 @@
                             <stop offset="0%" stop-color="var(--bg0)" />
                             <stop offset="100%" stop-color="var(--bg1)" />
                         </linearGradient>
+                        <!-- Text shadow filters -->
+                        <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.5)"/>
+                        </filter>
+                        <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge> 
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <!-- Dramatic overlay gradient -->
+                        <radialGradient id="spotlightGradient" cx="50%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="rgba(255,255,255,0.1)" />
+                            <stop offset="100%" stop-color="rgba(0,0,0,0.3)" />
+                        </radialGradient>
                     </defs>
                     
                     <!-- Background -->
                     <rect width="1280" height="720" fill="url(#bgGradient)" />
+                    
+                    <!-- Dramatic overlay -->
+                    <rect id="dramaticOverlay" width="1280" height="720" fill="url(#spotlightGradient)" style="display: none;" />
                     
                     <!-- Guide Lines -->
                     <g id="guides" class="guides">
@@ -149,7 +222,7 @@
                             <rect x="0" y="0" width="8" height="600" fill="var(--accent)" rx="4" />
                             
                             <!-- Title -->
-                            <text id="title-a" x="40" y="140" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui">Create Amazing Content</text>
+                            <text id="title-a" x="40" y="140" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
                             <!-- Subtitle -->
                             <text id="subtitle-a" x="40" y="200" fill="var(--primary)" font-size="32" opacity="0.8" font-family="system-ui">Step by step tutorial</text>
@@ -160,12 +233,22 @@
                             <!-- Tag Pill -->
                             <rect id="tagPill-a" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
                             <text id="tag-a" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                            
+                            <!-- Visual Elements -->
+                            <g id="visualElements-a" class="visual-elements">
+                                <text id="arrow-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">→</text>
+                                <text id="star-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">★</text>
+                                <text id="checkmark-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">✓</text>
+                                <text id="exclamation-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">!</text>
+                                <text id="fire-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">🔥</text>
+                                <text id="lightning-a" x="900" y="300" fill="var(--accent)" font-size="80" text-anchor="middle" dominant-baseline="middle" style="display: none;">⚡</text>
+                            </g>
                         </g>
                         
                         <!-- Layout B: Centered Title (Default) -->
                         <g id="layout-b">
                             <!-- Title -->
-                            <text id="title-b" x="580" y="200" fill="var(--primary)" font-size="80" font-weight="700" text-anchor="middle" font-family="system-ui">Create Amazing Content</text>
+                            <text id="title-b" x="580" y="200" fill="var(--primary)" font-size="80" font-weight="700" text-anchor="middle" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
                             <!-- Title Underline -->
                             <rect id="titleUnderline-b" x="200" y="220" width="760" height="6" fill="var(--accent)" rx="3" />
@@ -179,6 +262,16 @@
                             <!-- Tag Pill -->
                             <rect id="tagPill-b" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
                             <text id="tag-b" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                            
+                            <!-- Visual Elements -->
+                            <g id="visualElements-b" class="visual-elements">
+                                <text id="arrow-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">→</text>
+                                <text id="star-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">★</text>
+                                <text id="checkmark-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">✓</text>
+                                <text id="exclamation-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">!</text>
+                                <text id="fire-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">🔥</text>
+                                <text id="lightning-b" x="900" y="450" fill="var(--accent)" font-size="100" text-anchor="middle" dominant-baseline="middle" style="display: none;">⚡</text>
+                            </g>
                         </g>
                         
                         <!-- Layout C: Split Bands -->
@@ -190,7 +283,7 @@
                             <rect x="0" y="250" width="1160" height="200" fill="var(--accent)" opacity="0.15" rx="8" />
                             
                             <!-- Title -->
-                            <text id="title-c" x="40" y="180" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui">Create Amazing Content</text>
+                            <text id="title-c" x="40" y="180" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
                             <!-- Subtitle -->
                             <text id="subtitle-c" x="40" y="350" fill="var(--primary)" font-size="32" opacity="0.9" font-family="system-ui">Step by step tutorial</text>
@@ -201,6 +294,54 @@
                             <!-- Tag Pill -->
                             <rect id="tagPill-c" x="1000" y="40" width="120" height="40" fill="var(--pill)" rx="20" />
                             <text id="tag-c" x="1060" y="60" fill="var(--tagText)" font-size="18" font-weight="600" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">TUTORIAL</text>
+                            
+                            <!-- Visual Elements -->
+                            <g id="visualElements-c" class="visual-elements">
+                                <text id="arrow-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">→</text>
+                                <text id="star-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">★</text>
+                                <text id="checkmark-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">✓</text>
+                                <text id="exclamation-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">!</text>
+                                <text id="fire-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">🔥</text>
+                                <text id="lightning-c" x="800" y="450" fill="var(--accent)" font-size="90" text-anchor="middle" dominant-baseline="middle" style="display: none;">⚡</text>
+                            </g>
+                        </g>
+                        
+                        <!-- Layout D: Urgency Alert -->
+                        <g id="layout-d" style="display: none;">
+                            <!-- Alert Background -->
+                            <rect x="0" y="0" width="1160" height="120" fill="var(--accent)" opacity="0.2" rx="8" />
+                            <rect x="0" y="480" width="1160" height="120" fill="var(--accent)" opacity="0.2" rx="8" />
+                            
+                            <!-- Warning borders -->
+                            <rect x="0" y="0" width="1160" height="8" fill="var(--accent)" rx="4" />
+                            <rect x="0" y="592" width="1160" height="8" fill="var(--accent)" rx="4" />
+                            
+                            <!-- Title -->
+                            <text id="title-d" x="580" y="280" fill="var(--primary)" font-size="76" font-weight="900" text-anchor="middle" font-family="system-ui" class="main-title">Create Amazing Content</text>
+                            
+                            <!-- Subtitle with urgency -->
+                            <text id="subtitle-d" x="580" y="340" fill="var(--accent)" font-size="28" text-anchor="middle" font-weight="600" font-family="system-ui">WATCH BEFORE IT'S TOO LATE!</text>
+                            
+                            <!-- Brand -->
+                            <text id="brand-d" x="580" y="560" fill="var(--primary)" font-size="24" text-anchor="middle" opacity="0.8" font-family="system-ui">YourChannel</text>
+                            
+                            <!-- Urgency indicators -->
+                            <text x="100" y="60" fill="var(--accent)" font-size="40" font-weight="700" font-family="system-ui">⚠️</text>
+                            <text x="1060" y="60" fill="var(--accent)" font-size="40" font-weight="700" font-family="system-ui">⚠️</text>
+                            
+                            <!-- Tag Pill (larger for urgency) -->
+                            <rect id="tagPill-d" x="980" y="25" width="140" height="50" fill="var(--pill)" rx="25" stroke="var(--accent)" stroke-width="3" />
+                            <text id="tag-d" x="1050" y="50" fill="var(--tagText)" font-size="20" font-weight="700" text-anchor="middle" dominant-baseline="middle" font-family="system-ui">URGENT</text>
+                            
+                            <!-- Visual Elements -->
+                            <g id="visualElements-d" class="visual-elements">
+                                <text id="arrow-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">→</text>
+                                <text id="star-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">★</text>
+                                <text id="checkmark-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">✓</text>
+                                <text id="exclamation-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">!</text>
+                                <text id="fire-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">🔥</text>
+                                <text id="lightning-d" x="200" y="450" fill="var(--accent)" font-size="120" text-anchor="middle" dominant-baseline="middle" style="display: none;">⚡</text>
+                            </g>
                         </g>
                         
                     </g>

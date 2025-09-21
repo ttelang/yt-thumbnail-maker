@@ -18,7 +18,14 @@ const palettes = {
     neon: ['#0a0a0a', '#171717', '#00ff88', '#ff0080', '#00ddff', '#000000'],
     gold: ['#451a03', '#78350f', '#ffffff', '#eab308', '#ca8a04', '#1f2937'],
     midnight: ['#0f0f23', '#1a1a2e', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
-    volcano: ['#7c2d12', '#9a3412', '#ffffff', '#f97316', '#dc2626', '#ffffff']
+    volcano: ['#7c2d12', '#9a3412', '#ffffff', '#f97316', '#dc2626', '#ffffff'],
+    // High-contrast and emotional trigger presets
+    urgent: ['#000000', '#1a0000', '#ffffff', '#ff0000', '#ff4444', '#ffffff'],
+    shock: ['#ffffff', '#f8f8f8', '#000000', '#ff0080', '#ff0040', '#ffffff'],
+    warning: ['#1a1a00', '#333300', '#ffffff', '#ffff00', '#ffcc00', '#000000'],
+    success: ['#003300', '#004400', '#ffffff', '#00ff00', '#00cc00', '#000000'],
+    viral: ['#ff00ff', '#cc00cc', '#ffffff', '#00ffff', '#0099ff', '#000000'],
+    mystery: ['#0a0a0a', '#1a0a1a', '#ffffff', '#8000ff', '#6600cc', '#ffffff']
 };
 
 // Elements
@@ -29,6 +36,22 @@ const brandInput = document.getElementById('brandInput');
 const layoutSelect = document.getElementById('layoutSelect');
 const fontSizeSlider = document.getElementById('fontSizeSlider');
 const fontSizeValue = document.getElementById('fontSizeValue');
+
+// Visual elements
+const visualElementCheckboxes = {
+    arrow: document.getElementById('showArrow'),
+    star: document.getElementById('showStar'),
+    checkmark: document.getElementById('showCheckmark'),
+    exclamation: document.getElementById('showExclamation'),
+    fire: document.getElementById('showFire'),
+    lightning: document.getElementById('showLightning')
+};
+const elementSizeSlider = document.getElementById('elementSizeSlider');
+const elementSizeValue = document.getElementById('elementSizeValue');
+
+// Drama elements
+const showDrama = document.getElementById('showDrama');
+const showTextShadow = document.getElementById('showTextShadow');
 
 // Color inputs
 const colorInputs = {
@@ -68,10 +91,14 @@ function autofitTitle(layout) {
     const titleEl = document.getElementById(`title-${layout}`);
     const subtitleEl = document.getElementById(`subtitle-${layout}`);
     const title = titleInput.value;
-    let fontSize = (layout === 'b' ? 80 : 72) + currentFontSizeOffset;
+    let fontSize;
+    if (layout === 'b') fontSize = 80 + currentFontSizeOffset;
+    else if (layout === 'd') fontSize = 76 + currentFontSizeOffset;
+    else fontSize = 72 + currentFontSizeOffset;
+    
     const minFontSize = 24;
     const maxFontSize = 120;
-    const maxWidth = layout === 'b' ? 920 : layout === 'a' ? 1120 : 1120;
+    const maxWidth = layout === 'b' || layout === 'd' ? 920 : 1120;
     
     // Apply font size constraints
     fontSize = Math.max(minFontSize, Math.min(maxFontSize, fontSize));
@@ -128,38 +155,44 @@ function updatePill(layout) {
 }
 
 // Update layout visibility
-function updateLayoutVisibility() {
-    ['a', 'b', 'c'].forEach(layout => {
-        const el = document.getElementById(`layout-${layout}`);
-        el.style.display = layout === currentLayout ? 'block' : 'none';
-    });
-}
-
-// Update content
-function updateContent() {
-    const title = titleInput.value;
-    const subtitle = subtitleInput.value;
-    const brand = brandInput.value;
-    
-    ['a', 'b', 'c'].forEach(layout => {
-        document.getElementById(`title-${layout}`).textContent = title;
-        document.getElementById(`subtitle-${layout}`).textContent = subtitle;
-        document.getElementById(`brand-${layout}`).textContent = brand;
-    });
-}
-
-// Main update function
+        function updateLayoutVisibility() {
+            ['a', 'b', 'c', 'd'].forEach(layout => {
+                const el = document.getElementById(`layout-${layout}`);
+                el.style.display = layout === currentLayout ? 'block' : 'none';
+            });
+        }// Update content
+        function updateContent() {
+            const title = titleInput.value;
+            const subtitle = subtitleInput.value;
+            const brand = brandInput.value;
+            
+            ['a', 'b', 'c', 'd'].forEach(layout => {
+                document.getElementById(`title-${layout}`).textContent = title;
+                if (layout !== 'd') {
+                    document.getElementById(`subtitle-${layout}`).textContent = subtitle;
+                }
+                document.getElementById(`brand-${layout}`).textContent = brand;
+            });
+            
+            // Special handling for Layout D subtitle (urgency message)
+            if (subtitle.trim()) {
+                document.getElementById('subtitle-d').textContent = subtitle.toUpperCase() + ' - DON\'T MISS OUT!';
+            } else {
+                document.getElementById('subtitle-d').textContent = 'WATCH BEFORE IT\'S TOO LATE!';
+            }
+        }// Main update function
 function update() {
     applyCSSVariables();
     updateContent();
     updateLayoutVisibility();
     
-    // Update title sizing and pill for current layout
-    autofitTitle(currentLayout);
-    updatePill(currentLayout);
-}
-
-// Export functions
+        // Update title sizing and pill for current layout
+        autofitTitle(currentLayout);
+        updatePill(currentLayout);
+        updateVisualElements();
+        updateCharacterCounters();
+        updateDramaEffects();
+    }// Export functions
 function exportSVG() {
     const svg = document.getElementById('thumb');
     const serializer = new XMLSerializer();
@@ -246,14 +279,75 @@ function adjustFontSize(delta) {
 
 function setFontSizeOffset(value) {
     currentFontSizeOffset = parseInt(value);
-    updateFontSizeDisplay();
-}
-
-function updateFontSizeDisplay() {
-    fontSizeValue.textContent = currentFontSizeOffset > 0 ? `+${currentFontSizeOffset}` : currentFontSizeOffset;
-}
-
-// Toggle guides
+        updateFontSizeDisplay();
+    }
+    
+    function updateFontSizeDisplay() {
+        fontSizeValue.textContent = currentFontSizeOffset > 0 ? `+${currentFontSizeOffset}` : currentFontSizeOffset;
+    }
+    
+    // Character counter functions
+    function updateCharacterCounters() {
+        updateCounter('titleInput', 'titleCounter', 40, 20);
+        updateCounter('subtitleInput', 'subtitleCounter', 60, 40);
+        updateCounter('tagInput', 'tagCounter', 12, 8);
+    }
+    
+    function updateCounter(inputId, counterId, maxChars, warningThreshold) {
+        const input = document.getElementById(inputId);
+        const counter = document.getElementById(counterId);
+        const length = input.value.length;
+        
+        counter.textContent = `(${length}/${maxChars})`;
+        counter.className = 'char-counter';
+        
+        if (length >= maxChars) {
+            counter.classList.add('danger');
+        } else if (length >= warningThreshold) {
+            counter.classList.add('warning');
+        }
+    }
+    
+    // Visual elements functions
+    function updateVisualElements() {
+        const elementSize = parseInt(elementSizeSlider.value);
+        elementSizeValue.textContent = elementSize;
+        
+        ['a', 'b', 'c', 'd'].forEach(layout => {
+            Object.keys(visualElementCheckboxes).forEach(elementType => {
+                const element = document.getElementById(`${elementType}-${layout}`);
+                const checkbox = visualElementCheckboxes[elementType];
+                
+                if (element && checkbox) {
+                    element.style.display = checkbox.checked ? 'block' : 'none';
+                    
+                    // Apply size scaling
+                    const baseFontSize = layout === 'b' ? 100 : layout === 'd' ? 120 : layout === 'a' ? 80 : 90;
+                    const scaledSize = Math.round(baseFontSize * (elementSize / 100));
+                    element.setAttribute('font-size', scaledSize);
+                }
+            });
+        });
+    }
+    
+    // Drama effects functions
+    function updateDramaEffects() {
+        // Toggle dramatic overlay
+        const overlay = document.getElementById('dramaticOverlay');
+        if (overlay) {
+            overlay.style.display = showDrama.checked ? 'block' : 'none';
+        }
+        
+        // Toggle text shadows
+        const titles = document.querySelectorAll('.main-title');
+        titles.forEach(title => {
+            if (showTextShadow.checked) {
+                title.setAttribute('filter', 'url(#textShadow)');
+            } else {
+                title.removeAttribute('filter');
+            }
+        });
+    }// Toggle guides
 function toggleGuides() {
     const guides = document.getElementById('guides');
     guides.classList.toggle('visible');
@@ -281,13 +375,31 @@ fontSizeSlider.addEventListener('change', (e) => {
     update(); // Instant update
 });
 
-Object.values(colorInputs).forEach(input => {
-    input.addEventListener('input', () => {
-        update(); // Instant update
-    });
-});
-
-// Preset buttons
+        Object.values(colorInputs).forEach(input => {
+            input.addEventListener('input', () => {
+                update(); // Instant update
+            });
+        });
+        
+        // Visual elements event listeners
+        Object.values(visualElementCheckboxes).forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                update(); // Instant update
+            });
+        });
+        
+        elementSizeSlider.addEventListener('input', () => {
+            update(); // Instant update
+        });
+        
+        // Drama effects event listeners
+        showDrama.addEventListener('change', () => {
+            update(); // Instant update
+        });
+        
+        showTextShadow.addEventListener('change', () => {
+            update(); // Instant update
+        });// Preset buttons
 document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const preset = btn.dataset.preset;

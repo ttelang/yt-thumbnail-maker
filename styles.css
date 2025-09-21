@@ -175,6 +175,57 @@ body {
     border-radius: 4px;
 }
 
+/* Visual elements styling */
+.visual-elements {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.element-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.element-toggle input[type="checkbox"] {
+    margin: 0;
+}
+
+.element-toggle label {
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.element-size-slider {
+    width: 100%;
+}
+
+/* Text brevity helpers */
+.char-counter {
+    font-size: 11px;
+    color: var(--ui-text-dim);
+    font-weight: normal;
+}
+
+.char-counter.warning {
+    color: #f59e0b;
+}
+
+.char-counter.danger {
+    color: #ef4444;
+}
+
+.text-tip {
+    font-size: 10px;
+    color: var(--ui-text-dim);
+    font-style: italic;
+    margin-top: 2px;
+    display: block;
+}
+
 .color-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
