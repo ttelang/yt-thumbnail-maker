@@ -133,7 +133,13 @@
             </div>
 
             <div class="control-section">
-                <h3>Export</h3>
+                <h3>Preview & Export</h3>
+                <div class="input-group">
+                    <div class="element-toggle">
+                        <input type="checkbox" id="showMobilePreview">
+                        <label for="showMobilePreview">Show Mobile Preview</label>
+                    </div>
+                </div>
                 <div class="update-section">
                     <div class="export-buttons">
                         <button class="export-btn" id="exportSvg">Export SVG</button>
@@ -147,8 +153,13 @@
         </div>
 
         <div class="canvas-container">
-            <div class="svg-wrapper">
-                <svg id="thumb" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+            <div class="preview-container">
+                <div class="preview-labels">
+                    <span class="preview-label desktop-label">Desktop Preview</span>
+                    <span class="preview-label mobile-label" style="display: none;">Mobile Preview</span>
+                </div>
+                <div class="svg-wrapper desktop-preview">
+                    <svg id="thumb" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" stop-color="var(--bg0)" />
@@ -361,6 +372,12 @@
                         
                     </g>
                 </svg>
+                </div>
+                <div class="svg-wrapper mobile-preview" style="display: none;">
+                    <svg id="thumbMobile" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Mobile SVG content will be dynamically copied from main SVG -->
+                    </svg>
+                </div>
             </div>
         </div>
 

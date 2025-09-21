@@ -8,6 +8,7 @@ Create stunning, professional YouTube thumbnails instantly! This advanced tool g
 ### 🎨 **Advanced Layout System**
 - **4 Distinct Layouts:** Left accent bar, centered title, bottom strip, and split layouts
 - **Real-time Preview:** Instant updates as you type - no update button needed
+- **Mobile Preview:** Toggle to see how thumbnails appear on mobile devices
 - **Responsive Design:** Optimized interface with colors panel on the right
 
 ### 🖼️ **Visual Elements & Customization**

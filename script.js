@@ -75,6 +75,7 @@ const removeBackground = document.getElementById('removeBackground');
 const backgroundOpacity = document.getElementById('backgroundOpacity');
 const backgroundOpacityValue = document.getElementById('backgroundOpacityValue');
 const enableTextBands = document.getElementById('enableTextBands');
+const showMobilePreview = document.getElementById('showMobilePreview');
 
 // Color inputs
 const colorInputs = {
@@ -233,6 +234,39 @@ function update() {
         updateCharacterCounters();
         updateDramaEffects();
         updateTextVisibility();
+        updateMobilePreview();
+    }
+
+    // Mobile preview sync function
+    function updateMobilePreview() {
+        if (showMobilePreview.checked) {
+            const mainSvg = document.getElementById('thumb');
+            const mobileSvg = document.getElementById('thumbMobile');
+            
+            // Clone the main SVG content to mobile SVG
+            mobileSvg.innerHTML = mainSvg.innerHTML;
+        }
+    }
+
+    // Toggle mobile preview visibility
+    function toggleMobilePreview() {
+        const mobileWrapper = document.querySelector('.mobile-preview');
+        const mobileLabel = document.querySelector('.mobile-label');
+        const desktopLabel = document.querySelector('.desktop-label');
+        const canvasContainer = document.querySelector('.canvas-container');
+        
+        if (showMobilePreview.checked) {
+            mobileWrapper.style.display = 'block';
+            mobileLabel.style.display = 'inline';
+            desktopLabel.textContent = 'Desktop Preview';
+            canvasContainer.classList.add('mobile-preview-active');
+            updateMobilePreview();
+        } else {
+            mobileWrapper.style.display = 'none';
+            mobileLabel.style.display = 'none';
+            desktopLabel.textContent = 'Desktop Preview';
+            canvasContainer.classList.remove('mobile-preview-active');
+        }
     }
     
     // Export functions
@@ -710,7 +744,9 @@ fontSizeSlider.addEventListener('change', (e) => {
         
         enableTextBands.addEventListener('change', () => {
             update(); // Instant update
-        });// Preset buttons
+        });
+
+        showMobilePreview.addEventListener('change', toggleMobilePreview);// Preset buttons
 document.querySelectorAll('.preset-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const preset = btn.dataset.preset;
