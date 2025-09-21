@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube Thumbnail Generator</title>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8376159378251699"
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8376                        <!-- Layout B: Centered Title (Default) -->
+                        <g id="layout-b">
+                            <!-- Title Background Band -->
+                            <rect id="titleBand-b" x="100" y="165" width="960" height="70" fill="rgba(0,0,0,0.7)" rx="10" style="display: none;" />
+                            
+                            <!-- Title -->
+                            <text id="title-b" x="580" y="200" fill="var(--primary)" font-size="80" font-weight="700" text-anchor="middle" font-family="system-ui">Create Amazing Content</text>
+                            
+                            <!-- Title Underline -->
+                            <rect id="titleUnderline-b" x="200" y="220" width="760" height="6" fill="var(--accent)" rx="3" />
+                            
+                            <!-- Subtitle Background Band -->
+                            <rect id="subtitleBand-b" x="200" y="255" width="760" height="50" fill="rgba(0,0,0,0.6)" rx="8" style="display: none;" />
+                            
+                            <!-- Subtitle -->
+                            <text id="subtitle-b" x="580" y="280" fill="var(--primary)" font-size="36" text-anchor="middle" opacity="0.8" font-family="system-ui">Step by step tutorial</text>99"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -69,6 +84,10 @@
                     <div class="element-toggle">
                         <input type="checkbox" id="enableTextOutline" checked>
                         <label for="enableTextOutline">Text Outline (for visibility)</label>
+                    </div>
+                    <div class="element-toggle">
+                        <input type="checkbox" id="enableTextBands">
+                        <label for="enableTextBands">Background Bands behind text</label>
                     </div>
                 </div>
             </div>
@@ -258,11 +277,20 @@
                             <!-- Accent Bar -->
                             <rect x="0" y="0" width="8" height="600" fill="var(--accent)" rx="4" />
                             
+                            <!-- Title Background Band -->
+                            <rect id="titleBand-a" x="20" y="110" width="800" height="60" fill="rgba(0,0,0,0.7)" rx="8" style="display: none;" />
+                            
                             <!-- Title -->
                             <text id="title-a" x="40" y="140" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
+                            <!-- Subtitle Background Band -->
+                            <rect id="subtitleBand-a" x="20" y="175" width="600" height="40" fill="rgba(0,0,0,0.6)" rx="6" style="display: none;" />
+                            
                             <!-- Subtitle -->
                             <text id="subtitle-a" x="40" y="200" fill="var(--primary)" font-size="32" opacity="0.8" font-family="system-ui">Step by step tutorial</text>
+                            
+                            <!-- Brand Background Band -->
+                            <rect id="brandBand-a" x="20" y="540" width="300" height="35" fill="rgba(0,0,0,0.5)" rx="4" style="display: none;" />
                             
                             <!-- Brand -->
                             <text id="brand-a" x="40" y="560" fill="var(--primary)" font-size="24" opacity="0.6" font-family="system-ui">YourChannel</text>
@@ -293,6 +321,9 @@
                             <!-- Subtitle -->
                             <text id="subtitle-b" x="580" y="280" fill="var(--primary)" font-size="36" text-anchor="middle" opacity="0.8" font-family="system-ui">Step by step tutorial</text>
                             
+                            <!-- Brand Background Band -->
+                            <rect id="brandBand-b" x="430" y="520" width="300" height="35" fill="rgba(0,0,0,0.5)" rx="4" style="display: none;" />
+                            
                             <!-- Brand -->
                             <text id="brand-b" x="580" y="540" fill="var(--primary)" font-size="24" text-anchor="middle" opacity="0.6" font-family="system-ui">YourChannel</text>
                             
@@ -319,11 +350,20 @@
                             <!-- Horizontal Band -->
                             <rect x="0" y="250" width="1160" height="200" fill="var(--accent)" opacity="0.15" rx="8" />
                             
+                            <!-- Title Background Band -->
+                            <rect id="titleBand-c" x="20" y="150" width="800" height="60" fill="rgba(0,0,0,0.7)" rx="8" style="display: none;" />
+                            
                             <!-- Title -->
                             <text id="title-c" x="40" y="180" fill="var(--primary)" font-size="72" font-weight="700" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
+                            <!-- Subtitle Background Band -->
+                            <rect id="subtitleBand-c" x="20" y="325" width="600" height="40" fill="rgba(0,0,0,0.6)" rx="6" style="display: none;" />
+                            
                             <!-- Subtitle -->
                             <text id="subtitle-c" x="40" y="350" fill="var(--primary)" font-size="32" opacity="0.9" font-family="system-ui">Step by step tutorial</text>
+                            
+                            <!-- Brand Background Band -->
+                            <rect id="brandBand-c" x="20" y="540" width="300" height="35" fill="rgba(0,0,0,0.5)" rx="4" style="display: none;" />
                             
                             <!-- Brand -->
                             <text id="brand-c" x="40" y="560" fill="var(--primary)" font-size="24" opacity="0.6" font-family="system-ui">YourChannel</text>
@@ -353,11 +393,20 @@
                             <rect x="0" y="0" width="1160" height="8" fill="var(--accent)" rx="4" />
                             <rect x="0" y="592" width="1160" height="8" fill="var(--accent)" rx="4" />
                             
+                            <!-- Title Background Band -->
+                            <rect id="titleBand-d" x="80" y="245" width="1000" height="70" fill="rgba(0,0,0,0.8)" rx="10" style="display: none;" />
+                            
                             <!-- Title -->
                             <text id="title-d" x="580" y="280" fill="var(--primary)" font-size="76" font-weight="900" text-anchor="middle" font-family="system-ui" class="main-title">Create Amazing Content</text>
                             
+                            <!-- Subtitle Background Band -->
+                            <rect id="subtitleBand-d" x="150" y="315" width="860" height="50" fill="rgba(0,0,0,0.7)" rx="8" style="display: none;" />
+                            
                             <!-- Subtitle with urgency -->
                             <text id="subtitle-d" x="580" y="340" fill="var(--accent)" font-size="28" text-anchor="middle" font-weight="600" font-family="system-ui">WATCH BEFORE IT'S TOO LATE!</text>
+                            
+                            <!-- Brand Background Band -->
+                            <rect id="brandBand-d" x="430" y="540" width="300" height="35" fill="rgba(0,0,0,0.6)" rx="4" style="display: none;" />
                             
                             <!-- Brand -->
                             <text id="brand-d" x="580" y="560" fill="var(--primary)" font-size="24" text-anchor="middle" opacity="0.8" font-family="system-ui">YourChannel</text>

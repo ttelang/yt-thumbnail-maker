@@ -59,6 +59,7 @@ const removeBackground = document.getElementById('removeBackground');
 const backgroundOpacity = document.getElementById('backgroundOpacity');
 const backgroundOpacityValue = document.getElementById('backgroundOpacityValue');
 const enableTextOutline = document.getElementById('enableTextOutline');
+const enableTextBands = document.getElementById('enableTextBands');
 
 // Color inputs
 const colorInputs = {
@@ -426,6 +427,102 @@ function setFontSizeOffset(value) {
                 element.removeAttribute('stroke-width');
             }
         });
+        
+        updateTextBands();
+    }
+    
+    function updateTextBands() {
+        const layouts = ['a', 'b', 'c', 'd'];
+        const hasBackground = document.getElementById('backgroundImage').style.display !== 'none';
+        const showBands = enableTextBands.checked && hasBackground;
+        
+        layouts.forEach(layout => {
+            // Title bands
+            const titleBand = document.getElementById(`titleBand-${layout}`);
+            if (titleBand) {
+                titleBand.style.display = showBands ? 'block' : 'none';
+            }
+            
+            // Subtitle bands
+            const subtitleBand = document.getElementById(`subtitleBand-${layout}`);
+            if (subtitleBand) {
+                subtitleBand.style.display = showBands ? 'block' : 'none';
+            }
+            
+            // Brand bands
+            const brandBand = document.getElementById(`brandBand-${layout}`);
+            if (brandBand) {
+                brandBand.style.display = showBands ? 'block' : 'none';
+            }
+        });
+        
+        // Update band sizes dynamically based on text content
+        updateBandSizes();
+    }
+    
+    function updateBandSizes() {
+        const layouts = ['a', 'b', 'c', 'd'];
+        
+        layouts.forEach(layout => {
+            // Update title band size
+            const titleText = document.getElementById(`title-${layout}`);
+            const titleBand = document.getElementById(`titleBand-${layout}`);
+            
+            if (titleText && titleBand && titleBand.style.display !== 'none') {
+                const textWidth = getTextWidth(titleText.textContent, titleText.getAttribute('font-size'), '700');
+                const padding = 40;
+                
+                if (layout === 'b' || layout === 'd') {
+                    // Centered layouts
+                    const bandWidth = Math.min(textWidth + padding, 1000);
+                    const bandX = 580 - bandWidth / 2;
+                    titleBand.setAttribute('x', bandX);
+                    titleBand.setAttribute('width', bandWidth);
+                } else {
+                    // Left-aligned layouts
+                    const bandWidth = Math.min(textWidth + padding, 800);
+                    titleBand.setAttribute('width', bandWidth);
+                }
+            }
+            
+            // Update subtitle band size
+            const subtitleText = document.getElementById(`subtitle-${layout}`);
+            const subtitleBand = document.getElementById(`subtitleBand-${layout}`);
+            
+            if (subtitleText && subtitleBand && subtitleBand.style.display !== 'none') {
+                const textWidth = getTextWidth(subtitleText.textContent, subtitleText.getAttribute('font-size'), 'normal');
+                const padding = 30;
+                
+                if (layout === 'b' || layout === 'd') {
+                    // Centered layouts
+                    const bandWidth = Math.min(textWidth + padding, 800);
+                    const bandX = 580 - bandWidth / 2;
+                    subtitleBand.setAttribute('x', bandX);
+                    subtitleBand.setAttribute('width', bandWidth);
+                } else {
+                    // Left-aligned layouts
+                    const bandWidth = Math.min(textWidth + padding, 600);
+                    subtitleBand.setAttribute('width', bandWidth);
+                }
+            }
+            
+            // Update brand band size
+            const brandText = document.getElementById(`brand-${layout}`);
+            const brandBand = document.getElementById(`brandBand-${layout}`);
+            
+            if (brandText && brandBand && brandBand.style.display !== 'none') {
+                const textWidth = getTextWidth(brandText.textContent, brandText.getAttribute('font-size'), 'normal');
+                const padding = 20;
+                const bandWidth = Math.min(textWidth + padding, 300);
+                
+                if (layout === 'b' || layout === 'd') {
+                    // Centered layouts
+                    const bandX = 580 - bandWidth / 2;
+                    brandBand.setAttribute('x', bandX);
+                }
+                brandBand.setAttribute('width', bandWidth);
+            }
+        });
     }// Toggle guides
 function toggleGuides() {
     const guides = document.getElementById('guides');
@@ -489,6 +586,10 @@ fontSizeSlider.addEventListener('change', (e) => {
         });
         
         enableTextOutline.addEventListener('change', () => {
+            update(); // Instant update
+        });
+        
+        enableTextBands.addEventListener('change', () => {
             update(); // Instant update
         });// Preset buttons
 document.querySelectorAll('.preset-btn').forEach(btn => {
