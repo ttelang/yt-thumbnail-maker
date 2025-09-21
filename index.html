@@ -24,14 +24,14 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>YouTube Thumbnail Generator</h1>
-            <div class="keyboard-help">
-                Shortcuts: E=Export SVG • [ ]=Font Size • G=Guides • 1-6=Presets • Ctrl/Cmd+S=Export PNG
-            </div>
+    <div class="header">
+        <h1>YouTube Thumbnail Generator</h1>
+        <div class="keyboard-help">
+            Shortcuts: E=Export SVG • [ ]=Font Size • G=Guides • 1-6=Presets • Ctrl/Cmd+S=Export PNG
         </div>
+    </div>
 
+    <div class="container">
         <div class="controls">
             <div class="control-section">
                 <h3>Content</h3>
@@ -134,61 +134,6 @@
                         <label for="showTextShadow">Text Shadows</label>
                     </div>
                 </div>
-            </div>
-
-            <div class="control-section">
-                <h3>Colors</h3>
-                <div class="color-grid">
-                    <div class="color-input">
-                        <label>BG Start</label>
-                        <input type="color" id="bg0Color" value="#1a1a2e">
-                    </div>
-                    <div class="color-input">
-                        <label>BG End</label>
-                        <input type="color" id="bg1Color" value="#16213e">
-                    </div>
-                    <div class="color-input">
-                        <label>Primary</label>
-                        <input type="color" id="primaryColor" value="#ffffff">
-                    </div>
-                    <div class="color-input">
-                        <label>Accent</label>
-                        <input type="color" id="accentColor" value="#ff6b6b">
-                    </div>
-                    <div class="color-input">
-                        <label>Pill</label>
-                        <input type="color" id="pillColor" value="#4ecdc4">
-                    </div>
-                    <div class="color-input">
-                        <label>Tag Text</label>
-                        <input type="color" id="tagTextColor" value="#ffffff">
-                    </div>
-                </div>
-                <div class="preset-buttons">
-                    <button class="preset-btn" data-preset="cool">Cool</button>
-                    <button class="preset-btn" data-preset="indigo">Indigo</button>
-                    <button class="preset-btn" data-preset="cyan">Cyan</button>
-                    <button class="preset-btn" data-preset="teal">Teal</button>
-                    <button class="preset-btn" data-preset="rose">Rose</button>
-                    <button class="preset-btn" data-preset="amber">Amber</button>
-                    <button class="preset-btn" data-preset="purple">Purple</button>
-                    <button class="preset-btn" data-preset="sunset">Sunset</button>
-                    <button class="preset-btn" data-preset="emerald">Emerald</button>
-                    <button class="preset-btn" data-preset="crimson">Crimson</button>
-                    <button class="preset-btn" data-preset="ocean">Ocean</button>
-                    <button class="preset-btn" data-preset="forest">Forest</button>
-                    <button class="preset-btn" data-preset="neon">Neon</button>
-                    <button class="preset-btn" data-preset="gold">Gold</button>
-                    <button class="preset-btn" data-preset="midnight">Midnight</button>
-                    <button class="preset-btn" data-preset="volcano">Volcano</button>
-                    <button class="preset-btn" data-preset="urgent">Urgent</button>
-                    <button class="preset-btn" data-preset="shock">Shock</button>
-                    <button class="preset-btn" data-preset="warning">Warning</button>
-                    <button class="preset-btn" data-preset="success">Success</button>
-                    <button class="preset-btn" data-preset="viral">Viral</button>
-                    <button class="preset-btn" data-preset="mystery">Mystery</button>
-                </div>
-                <button class="preset-btn" data-preset="random">Randomize</button>
             </div>
 
             <div class="control-section">
@@ -432,6 +377,63 @@
                         
                     </g>
                 </svg>
+            </div>
+        </div>
+
+        <div class="colors-sidebar">
+            <div class="control-section">
+                <h3>Colors</h3>
+                <div class="color-grid">
+                    <div class="color-input">
+                        <label>BG Start</label>
+                        <input type="color" id="bg0Color" value="#1a1a2e">
+                    </div>
+                    <div class="color-input">
+                        <label>BG End</label>
+                        <input type="color" id="bg1Color" value="#16213e">
+                    </div>
+                    <div class="color-input">
+                        <label>Primary</label>
+                        <input type="color" id="primaryColor" value="#ffffff">
+                    </div>
+                    <div class="color-input">
+                        <label>Accent</label>
+                        <input type="color" id="accentColor" value="#ff6b6b">
+                    </div>
+                    <div class="color-input">
+                        <label>Pill</label>
+                        <input type="color" id="pillColor" value="#4ecdc4">
+                    </div>
+                    <div class="color-input">
+                        <label>Tag Text</label>
+                        <input type="color" id="tagTextColor" value="#ffffff">
+                    </div>
+                </div>
+                <div class="preset-buttons">
+                    <button class="preset-btn" data-preset="cool">Cool</button>
+                    <button class="preset-btn" data-preset="indigo">Indigo</button>
+                    <button class="preset-btn" data-preset="cyan">Cyan</button>
+                    <button class="preset-btn" data-preset="teal">Teal</button>
+                    <button class="preset-btn" data-preset="rose">Rose</button>
+                    <button class="preset-btn" data-preset="amber">Amber</button>
+                    <button class="preset-btn" data-preset="purple">Purple</button>
+                    <button class="preset-btn" data-preset="sunset">Sunset</button>
+                    <button class="preset-btn" data-preset="emerald">Emerald</button>
+                    <button class="preset-btn" data-preset="crimson">Crimson</button>
+                    <button class="preset-btn" data-preset="ocean">Ocean</button>
+                    <button class="preset-btn" data-preset="forest">Forest</button>
+                    <button class="preset-btn" data-preset="neon">Neon</button>
+                    <button class="preset-btn" data-preset="gold">Gold</button>
+                    <button class="preset-btn" data-preset="midnight">Midnight</button>
+                    <button class="preset-btn" data-preset="volcano">Volcano</button>
+                    <button class="preset-btn" data-preset="urgent">Urgent</button>
+                    <button class="preset-btn" data-preset="shock">Shock</button>
+                    <button class="preset-btn" data-preset="warning">Warning</button>
+                    <button class="preset-btn" data-preset="success">Success</button>
+                    <button class="preset-btn" data-preset="viral">Viral</button>
+                    <button class="preset-btn" data-preset="mystery">Mystery</button>
+                </div>
+                <button class="preset-btn" data-preset="random">Randomize</button>
             </div>
         </div>
     </div>
