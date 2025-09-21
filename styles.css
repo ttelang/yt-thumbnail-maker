@@ -548,3 +548,41 @@ button:disabled {
         margin: 0 auto;
     }
 }
+
+/* Google Ads Styling */
+.ad-container {
+    margin: 20px 0;
+    text-align: center;
+    background: var(--ui-surface);
+    border: 1px solid var(--ui-border);
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.ad-banner {
+    max-width: 1600px;
+    margin: 20px auto;
+    min-height: 90px; /* Standard banner height */
+}
+
+.ad-sidebar {
+    margin-top: 30px;
+    min-height: 250px; /* Standard sidebar ad height */
+    max-width: 300px;
+}
+
+.ad-container ins {
+    background: transparent !important;
+}
+
+/* Hide ads on very small screens for better UX */
+@media (max-width: 768px) {
+    .ad-sidebar {
+        margin-top: 20px;
+        min-height: 200px;
+    }
+    
+    .ad-banner {
+        min-height: 50px;
+    }
+}
