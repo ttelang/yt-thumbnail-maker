@@ -52,6 +52,13 @@
             font-weight: 600;
         }
 
+        .keyboard-help {
+            font-size: 12px;
+            color: var(--ui-text-dim);
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
         .controls {
             background: var(--ui-surface);
             border: 1px solid var(--ui-border);
@@ -235,6 +242,17 @@
             display: block;
         }
 
+        .guides {
+            stroke: rgba(255, 255, 255, 0.2);
+            stroke-width: 1;
+            fill: none;
+            display: none;
+        }
+
+        .guides.visible {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .controls {
                 grid-template-columns: 1fr;
@@ -251,6 +269,9 @@
     <div class="container">
         <div class="header">
             <h1>YouTube Thumbnail Generator</h1>
+            <div class="keyboard-help">
+                Shortcuts: U=Update • E=Export SVG • [ ]=Font Size • G=Guides • 1-6=Presets • Ctrl/Cmd+S=Export PNG
+            </div>
         </div>
 
         <div class="controls">
@@ -346,6 +367,20 @@
                     
                     <!-- Background -->
                     <rect width="1280" height="720" fill="url(#bgGradient)" />
+                    
+                    <!-- Guide Lines -->
+                    <g id="guides" class="guides">
+                        <!-- Safe Area Guide (60px margin) -->
+                        <rect x="60" y="60" width="1160" height="600" class="guides" />
+                        <!-- Center lines -->
+                        <line x1="640" y1="0" x2="640" y2="720" class="guides" />
+                        <line x1="0" y1="360" x2="1280" y2="360" class="guides" />
+                        <!-- Third lines -->
+                        <line x1="427" y1="0" x2="427" y2="720" class="guides" opacity="0.5" />
+                        <line x1="853" y1="0" x2="853" y2="720" class="guides" opacity="0.5" />
+                        <line x1="0" y1="240" x2="1280" y2="240" class="guides" opacity="0.5" />
+                        <line x1="0" y1="480" x2="1280" y2="480" class="guides" opacity="0.5" />
+                    </g>
                     
                     <!-- Safe Area Container -->
                     <g transform="translate(60,60)">
@@ -484,10 +519,15 @@
         function autofitTitle(layout) {
             const titleEl = document.getElementById(`title-${layout}`);
             const title = titleInput.value;
-            let fontSize = layout === 'b' ? 80 : 72;
-            const minFontSize = 32;
+            let fontSize = (layout === 'b' ? 80 : 72) + currentFontSizeOffset;
+            const minFontSize = 24;
+            const maxFontSize = 120;
             const maxWidth = layout === 'b' ? 920 : layout === 'a' ? 1120 : 1120;
             
+            // Apply font size constraints
+            fontSize = Math.max(minFontSize, Math.min(maxFontSize, fontSize));
+            
+            // Auto-fit to width
             while (fontSize > minFontSize) {
                 const width = getTextWidth(title, fontSize, '700');
                 if (width <= maxWidth) break;
@@ -681,6 +721,82 @@
         updateBtn.addEventListener('click', update);
         document.getElementById('exportSvg').addEventListener('click', exportSVG);
         document.getElementById('exportPng').addEventListener('click', exportPNG);
+        
+        // Font size adjustment
+        let currentFontSizeOffset = 0;
+        const maxFontSizeOffset = 20;
+        const minFontSizeOffset = -20;
+        
+        function adjustFontSize(delta) {
+            currentFontSizeOffset = Math.max(minFontSizeOffset, Math.min(maxFontSizeOffset, currentFontSizeOffset + delta));
+            setDirty(true);
+        }
+        
+        // Toggle guides
+        function toggleGuides() {
+            const guides = document.getElementById('guides');
+            guides.classList.toggle('visible');
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Prevent shortcuts when typing in input fields
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                // Only allow Ctrl/Cmd+S when in input fields
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    exportPNG();
+                }
+                return;
+            }
+            
+            switch(e.key.toLowerCase()) {
+                case 'u':
+                    e.preventDefault();
+                    update();
+                    break;
+                case 'e':
+                    e.preventDefault();
+                    exportSVG();
+                    break;
+                case '[':
+                    e.preventDefault();
+                    adjustFontSize(-2);
+                    break;
+                case ']':
+                    e.preventDefault();
+                    adjustFontSize(2);
+                    break;
+                case 'g':
+                    e.preventDefault();
+                    toggleGuides();
+                    break;
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                    e.preventDefault();
+                    const presetNames = ['cool', 'indigo', 'cyan', 'teal', 'rose', 'amber'];
+                    const presetIndex = parseInt(e.key) - 1;
+                    if (presetIndex < presetNames.length) {
+                        const colors = palettes[presetNames[presetIndex]];
+                        const colorKeys = ['bg0', 'bg1', 'primary', 'accent', 'pill', 'tagText'];
+                        colors.forEach((color, index) => {
+                            colorInputs[colorKeys[index]].value = color;
+                        });
+                        setDirty(true);
+                    }
+                    break;
+                case 's':
+                    if (e.ctrlKey || e.metaKey) {
+                        e.preventDefault();
+                        exportPNG();
+                    }
+                    break;
+            }
+        });
         
         // Initialize
         update();
