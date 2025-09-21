@@ -82,10 +82,6 @@
                 </div>
                 <div class="input-group">
                     <div class="element-toggle">
-                        <input type="checkbox" id="enableTextOutline" checked>
-                        <label for="enableTextOutline">Text Outline (for visibility)</label>
-                    </div>
-                    <div class="element-toggle">
                         <input type="checkbox" id="enableTextBands">
                         <label for="enableTextBands">Background Bands behind text</label>
                     </div>
@@ -166,18 +162,6 @@
                             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                             <feMerge> 
                                 <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                        <!-- Enhanced text outline filter -->
-                        <filter id="textOutline" x="-50%" y="-50%" width="200%" height="200%">
-                            <feMorphology operator="dilate" radius="2" result="outline"/>
-                            <feFlood flood-color="#000000" flood-opacity="0.8" result="outlineColor"/>
-                            <feComposite in="outlineColor" in2="outline" operator="in" result="coloredOutline"/>
-                            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.9)" result="shadow"/>
-                            <feMerge>
-                                <feMergeNode in="shadow"/>
-                                <feMergeNode in="coloredOutline"/>
                                 <feMergeNode in="SourceGraphic"/>
                             </feMerge>
                         </filter>

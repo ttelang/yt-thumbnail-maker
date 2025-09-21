@@ -14,7 +14,7 @@ Create stunning, professional YouTube thumbnails instantly! This advanced tool g
 - **Background Images:** Upload custom backgrounds with opacity control
 - **Visual Elements:** Add arrows, stars, checkmarks, exclamation marks, fire, and lightning
 - **Element Sizing:** Adjustable visual element sizes with real-time preview
-- **Text Visibility:** Multiple options including outlines, shadows, and background bands
+- **Text Visibility:** Multiple options including shadows and background bands
 
 ### 🎯 **Professional Typography**
 - **Dynamic Font Sizing:** Auto-adjusting font sizes based on content length

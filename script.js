@@ -74,7 +74,6 @@ const backgroundUpload = document.getElementById('backgroundUpload');
 const removeBackground = document.getElementById('removeBackground');
 const backgroundOpacity = document.getElementById('backgroundOpacity');
 const backgroundOpacityValue = document.getElementById('backgroundOpacityValue');
-const enableTextOutline = document.getElementById('enableTextOutline');
 const enableTextBands = document.getElementById('enableTextBands');
 
 // Color inputs
@@ -546,19 +545,10 @@ function setFontSizeOffset(value) {
         const hasBackground = document.getElementById('backgroundImage').style.display !== 'none';
         
         textElements.forEach(element => {
-            if (enableTextOutline.checked && hasBackground) {
-                element.setAttribute('filter', 'url(#textOutline)');
-                element.setAttribute('stroke', '#000000');
-                element.setAttribute('stroke-width', '1');
-            } else if (enableTextOutline.checked) {
-                element.setAttribute('filter', 'url(#textShadow)');
-                element.removeAttribute('stroke');
-                element.removeAttribute('stroke-width');
-            } else {
-                element.removeAttribute('filter');
-                element.removeAttribute('stroke');
-                element.removeAttribute('stroke-width');
-            }
+            // Remove any existing filters and strokes
+            element.removeAttribute('filter');
+            element.removeAttribute('stroke');
+            element.removeAttribute('stroke-width');
         });
         
         updateTextBands();
@@ -716,10 +706,6 @@ fontSizeSlider.addEventListener('change', (e) => {
         
         backgroundOpacity.addEventListener('input', () => {
             updateBackgroundOpacity();
-        });
-        
-        enableTextOutline.addEventListener('change', () => {
-            update(); // Instant update
         });
         
         enableTextBands.addEventListener('change', () => {
