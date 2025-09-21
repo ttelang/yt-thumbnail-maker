@@ -8,7 +8,17 @@ const palettes = {
     cyan: ['#164e63', '#155e75', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
     teal: ['#134e4a', '#115e59', '#ffffff', '#14b8a6', '#0d9488', '#ffffff'],
     rose: ['#4c1d24', '#881337', '#ffffff', '#f43f5e', '#e11d48', '#ffffff'],
-    amber: ['#451a03', '#92400e', '#ffffff', '#f59e0b', '#d97706', '#ffffff']
+    amber: ['#451a03', '#92400e', '#ffffff', '#f59e0b', '#d97706', '#ffffff'],
+    purple: ['#2d1b69', '#4c1d95', '#ffffff', '#a855f7', '#9333ea', '#ffffff'],
+    sunset: ['#431407', '#9a3412', '#ffffff', '#f97316', '#ea580c', '#ffffff'],
+    emerald: ['#064e3b', '#065f46', '#ffffff', '#10b981', '#059669', '#ffffff'],
+    crimson: ['#450a0a', '#7f1d1d', '#ffffff', '#dc2626', '#b91c1c', '#ffffff'],
+    ocean: ['#0c4a6e', '#075985', '#ffffff', '#0284c7', '#0369a1', '#ffffff'],
+    forest: ['#14532d', '#166534', '#ffffff', '#16a34a', '#15803d', '#ffffff'],
+    neon: ['#0a0a0a', '#171717', '#00ff88', '#ff0080', '#00ddff', '#000000'],
+    gold: ['#451a03', '#78350f', '#ffffff', '#eab308', '#ca8a04', '#1f2937'],
+    midnight: ['#0f0f23', '#1a1a2e', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
+    volcano: ['#7c2d12', '#9a3412', '#ffffff', '#f97316', '#dc2626', '#ffffff']
 };
 
 // Elements
