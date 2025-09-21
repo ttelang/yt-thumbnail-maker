@@ -239,36 +239,9 @@
             align-items: center;
         }
 
-        .update-btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            background: var(--ui-primary);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-
-        .update-btn:hover:not(:disabled) {
-            background: #2563eb;
-        }
-
-        .update-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .status {
-            font-size: 12px;
-            color: #fbbf24;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-
-        .status.visible {
-            opacity: 1;
+        .auto-update-info {
+            margin-top: 8px;
+            text-align: center;
         }
 
         .export-buttons {
@@ -343,7 +316,7 @@
         <div class="header">
             <h1>YouTube Thumbnail Generator</h1>
             <div class="keyboard-help">
-                Shortcuts: U=Update • E=Export SVG • [ ]=Font Size • G=Guides • 1-6=Presets • Ctrl/Cmd+S=Export PNG
+                Shortcuts: E=Export SVG • [ ]=Font Size • G=Guides • 1-6=Presets • Ctrl/Cmd+S=Export PNG
             </div>
         </div>
 
@@ -420,13 +393,14 @@
             </div>
 
             <div class="control-section">
-                <h3>Generate</h3>
+                <h3>Export</h3>
                 <div class="update-section">
-                    <button class="update-btn" id="updateBtn">Update Thumbnail</button>
-                    <div class="status" id="status">Changes pending...</div>
                     <div class="export-buttons">
                         <button class="export-btn" id="exportSvg">Export SVG</button>
                         <button class="export-btn" id="exportPng">Export PNG</button>
+                    </div>
+                    <div class="auto-update-info">
+                        <small style="color: var(--ui-text-dim); font-size: 11px;">Auto-updating as you type</small>
                     </div>
                 </div>
             </div>
@@ -530,7 +504,6 @@
 
     <script>
         // State
-        let dirty = false;
         let currentLayout = 'b';
         
         // Palettes
@@ -551,8 +524,6 @@
         const layoutSelect = document.getElementById('layoutSelect');
         const fontSizeSlider = document.getElementById('fontSizeSlider');
         const fontSizeValue = document.getElementById('fontSizeValue');
-        const updateBtn = document.getElementById('updateBtn');
-        const status = document.getElementById('status');
         
         // Color inputs
         const colorInputs = {
@@ -564,12 +535,7 @@
             tagText: document.getElementById('tagTextColor')
         };
         
-        // Set dirty state
-        function setDirty(isDirty) {
-            dirty = isDirty;
-            updateBtn.disabled = !dirty;
-            status.classList.toggle('visible', dirty);
-        }
+
         
         // Apply CSS variables
         function applyCSSVariables() {
@@ -682,8 +648,6 @@
             // Update title sizing and pill for current layout
             autofitTitle(currentLayout);
             updatePill(currentLayout);
-            
-            setDirty(false);
         }
         
         // Export functions
@@ -759,28 +723,32 @@
             img.src = url;
         }
         
-        // Event listeners
+        // Event listeners with instant updates
         [titleInput, subtitleInput, tagInput, brandInput].forEach(input => {
-            input.addEventListener('input', () => setDirty(true));
+            input.addEventListener('input', () => {
+                update(); // Instant update
+            });
         });
         
         layoutSelect.addEventListener('change', (e) => {
             currentLayout = e.target.value;
-            setDirty(true);
+            update(); // Instant update
         });
         
         fontSizeSlider.addEventListener('input', (e) => {
-            setFontSizeOffset(e.target.value, false);
-            update(); // Auto-preview
+            setFontSizeOffset(e.target.value);
+            update(); // Instant update
         });
         
         fontSizeSlider.addEventListener('change', (e) => {
-            setFontSizeOffset(e.target.value, false);
-            update(); // Auto-preview
+            setFontSizeOffset(e.target.value);
+            update(); // Instant update
         });
         
         Object.values(colorInputs).forEach(input => {
-            input.addEventListener('input', () => setDirty(true));
+            input.addEventListener('input', () => {
+                update(); // Instant update
+            });
         });
         
         // Preset buttons
@@ -802,12 +770,11 @@
                     colors.forEach((color, index) => {
                         colorInputs[colorKeys[index]].value = color;
                     });
-                    setDirty(true);
+                    update(); // Instant update
                 }
             });
         });
         
-        updateBtn.addEventListener('click', update);
         document.getElementById('exportSvg').addEventListener('click', exportSVG);
         document.getElementById('exportPng').addEventListener('click', exportPNG);
         
@@ -820,15 +787,12 @@
             currentFontSizeOffset = Math.max(minFontSizeOffset, Math.min(maxFontSizeOffset, currentFontSizeOffset + delta));
             fontSizeSlider.value = currentFontSizeOffset;
             updateFontSizeDisplay();
-            setDirty(true);
+            update(); // Instant update
         }
         
-        function setFontSizeOffset(value, markDirty = true) {
+        function setFontSizeOffset(value) {
             currentFontSizeOffset = parseInt(value);
             updateFontSizeDisplay();
-            if (markDirty) {
-                setDirty(true);
-            }
         }
         
         function updateFontSizeDisplay() {
@@ -854,10 +818,6 @@
             }
             
             switch(e.key.toLowerCase()) {
-                case 'u':
-                    e.preventDefault();
-                    update();
-                    break;
                 case 'e':
                     e.preventDefault();
                     exportSVG();
@@ -889,7 +849,7 @@
                         colors.forEach((color, index) => {
                             colorInputs[colorKeys[index]].value = color;
                         });
-                        setDirty(true);
+                        update(); // Instant update
                     }
                     break;
                 case 's':
