@@ -52,6 +52,8 @@ const brandInput = document.getElementById('brandInput');
 const layoutSelect = document.getElementById('layoutSelect');
 const fontSizeSlider = document.getElementById('fontSizeSlider');
 const fontSizeValue = document.getElementById('fontSizeValue');
+const textRotationSlider = document.getElementById('textRotationSlider');
+const textRotationValue = document.getElementById('textRotationValue');
 
 // Visual elements
 const visualElementCheckboxes = {
@@ -234,7 +236,42 @@ function update() {
         updateCharacterCounters();
         updateDramaEffects();
         updateTextVisibility();
+        updateTextRotation();
         updateMobilePreview();
+    }
+
+    // Text rotation function
+    function updateTextRotation() {
+        const rotation = textRotationSlider.value;
+        
+        ['a', 'b', 'c', 'd'].forEach(layout => {
+            const titleElement = document.getElementById(`title-${layout}`);
+            const subtitleElement = document.getElementById(`subtitle-${layout}`);
+            
+            if (rotation == 0) {
+                // Remove rotation when angle is 0
+                titleElement.removeAttribute('transform');
+                if (subtitleElement) {
+                    subtitleElement.removeAttribute('transform');
+                }
+            } else {
+                // Get current position for rotation center
+                const titleX = titleElement.getAttribute('x') || 0;
+                const titleY = titleElement.getAttribute('y') || 0;
+                
+                // Apply rotation around text center
+                titleElement.setAttribute('transform', `rotate(${rotation} ${titleX} ${titleY})`);
+                
+                if (subtitleElement) {
+                    const subtitleX = subtitleElement.getAttribute('x') || 0;
+                    const subtitleY = subtitleElement.getAttribute('y') || 0;
+                    subtitleElement.setAttribute('transform', `rotate(${rotation} ${subtitleX} ${subtitleY})`);
+                }
+            }
+        });
+        
+        // Update the rotation value display
+        textRotationValue.textContent = rotation;
     }
 
     // Mobile preview sync function
@@ -446,6 +483,13 @@ function adjustFontSize(delta) {
     currentFontSizeOffset = Math.max(minFontSizeOffset, Math.min(maxFontSizeOffset, currentFontSizeOffset + delta));
     fontSizeSlider.value = currentFontSizeOffset;
     updateFontSizeDisplay();
+    update(); // Instant update
+}
+
+function adjustRotation(delta) {
+    const currentRotation = parseInt(textRotationSlider.value);
+    const newRotation = Math.max(-15, Math.min(15, currentRotation + delta));
+    textRotationSlider.value = newRotation;
     update(); // Instant update
 }
 
@@ -708,6 +752,14 @@ fontSizeSlider.addEventListener('change', (e) => {
     update(); // Instant update
 });
 
+textRotationSlider.addEventListener('input', (e) => {
+    update(); // Instant update
+});
+
+textRotationSlider.addEventListener('change', (e) => {
+    update(); // Instant update
+});
+
         Object.values(colorInputs).forEach(input => {
             input.addEventListener('input', () => {
                 update(); // Instant update
@@ -797,6 +849,16 @@ document.addEventListener('keydown', (e) => {
         case ']':
             e.preventDefault();
             adjustFontSize(2);
+            break;
+        case ',':
+        case '<':
+            e.preventDefault();
+            adjustRotation(-1);
+            break;
+        case '.':
+        case '>':
+            e.preventDefault();
+            adjustRotation(1);
             break;
         case 'g':
             e.preventDefault();

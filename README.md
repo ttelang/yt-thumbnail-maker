@@ -19,6 +19,7 @@ Create stunning, professional YouTube thumbnails instantly! This advanced tool g
 
 ### 🎯 **Professional Typography**
 - **Dynamic Font Sizing:** Auto-adjusting font sizes based on content length
+- **Text Rotation:** Tilt titles and subtitles at angles from -15° to +15° for dynamic visual impact
 - **Proportional Scaling:** Subtitle scales proportionally with title font size
 - **Extended Pill Text:** Support for up to 64-character category tags with smart sizing
 - **Character Counters:** Real-time feedback with optimal length indicators
@@ -33,6 +34,7 @@ Create stunning, professional YouTube thumbnails instantly! This advanced tool g
 - **U** - Update preview (legacy - now auto-updates)
 - **E** - Export SVG
 - **[** **]** - Adjust font size
+- **<** **>** - Adjust text rotation angle
 - **G** - Toggle guides
 - **1-6** - Apply preset colors
 - **Ctrl/Cmd+S** - Export PNG
@@ -57,7 +59,7 @@ Create stunning, professional YouTube thumbnails instantly! This advanced tool g
 3. **Pick Colors:** Choose from 22+ presets or customize manually
 4. **Add Elements:** Include visual elements like arrows, stars, or fire
 5. **Upload Background:** Optional custom background image with opacity control
-6. **Adjust Settings:** Fine-tune font sizes, element sizes, and visibility options
+6. **Adjust Settings:** Fine-tune font sizes, text rotation, element sizes, and visibility options
 7. **Export:** Download as SVG or PNG with keyboard shortcuts
 
 ## 🛠️ Technical Details

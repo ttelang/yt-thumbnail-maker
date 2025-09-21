@@ -213,7 +213,8 @@ input[type="range"]::-moz-range-progress {
 
 /* Enhanced range input base styling with more visible tracks */
 .font-size-slider,
-.element-size-slider {
+.element-size-slider,
+.rotation-slider {
     -webkit-appearance: none;
     appearance: none;
     background: rgba(136, 136, 136, 0.3) !important;
@@ -226,6 +227,7 @@ input[type="range"]::-moz-range-progress {
 /* Specific track styling for all sliders with dark line */
 .font-size-slider::-webkit-slider-track,
 .element-size-slider::-webkit-slider-track,
+.rotation-slider::-webkit-slider-track,
 input[type="range"]::-webkit-slider-track {
     height: 8px !important;
     background: linear-gradient(to bottom, #444, #000, #444) !important;
@@ -236,6 +238,7 @@ input[type="range"]::-webkit-slider-track {
 
 .font-size-slider::-moz-range-track,
 .element-size-slider::-moz-range-track,
+.rotation-slider::-moz-range-track,
 input[type="range"]::-moz-range-track {
     height: 8px !important;
     background: linear-gradient(to bottom, #444, #000, #444) !important;
