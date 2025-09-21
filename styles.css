@@ -557,22 +557,45 @@ button:disabled {
     border: 1px solid var(--ui-border);
     border-radius: 8px;
     padding: 10px;
+    overflow: hidden;
 }
 
 .ad-banner {
+    width: 100%;
     max-width: 1600px;
     margin: 20px auto;
     min-height: 90px; /* Standard banner height */
+    min-width: 320px; /* Minimum width for ads to display */
 }
 
 .ad-sidebar {
     margin-top: 30px;
     min-height: 250px; /* Standard sidebar ad height */
+    width: 100%;
     max-width: 300px;
+    min-width: 250px; /* Minimum width for sidebar ads */
 }
 
 .ad-container ins {
     background: transparent !important;
+    display: block !important;
+    width: 100% !important;
+    min-width: inherit;
+}
+
+/* Fallback styling when ads don't load or during development */
+.ad-container:empty::after,
+.ad-container ins:empty::after {
+    content: "Advertisement";
+    display: block;
+    padding: 20px;
+    background: var(--ui-bg);
+    border: 2px dashed var(--ui-border);
+    border-radius: 4px;
+    color: var(--ui-text-dim);
+    font-size: 12px;
+    text-align: center;
+    opacity: 0.5;
 }
 
 /* Hide ads on very small screens for better UX */
