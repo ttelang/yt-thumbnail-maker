@@ -111,6 +111,46 @@
             border-color: var(--ui-primary);
         }
 
+        .input-group input[type="range"] {
+            padding: 0;
+            height: 24px;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-track {
+            height: 4px;
+            background: var(--ui-border);
+            border-radius: 2px;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--ui-primary);
+            cursor: pointer;
+            margin-top: -6px;
+        }
+
+        .input-group input[type="range"]::-moz-range-track {
+            height: 4px;
+            background: var(--ui-border);
+            border-radius: 2px;
+            border: none;
+        }
+
+        .input-group input[type="range"]::-moz-range-thumb {
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--ui-primary);
+            cursor: pointer;
+            border: none;
+        }
+
         .color-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -301,6 +341,10 @@
                         <option value="c">Layout C - Split Bands</option>
                     </select>
                 </div>
+                <div class="input-group">
+                    <label for="fontSizeSlider">Font Size: <span id="fontSizeValue">0</span></label>
+                    <input type="range" id="fontSizeSlider" min="-20" max="20" value="0" step="1">
+                </div>
             </div>
 
             <div class="control-section">
@@ -472,6 +516,8 @@
         const tagInput = document.getElementById('tagInput');
         const brandInput = document.getElementById('brandInput');
         const layoutSelect = document.getElementById('layoutSelect');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        const fontSizeValue = document.getElementById('fontSizeValue');
         const updateBtn = document.getElementById('updateBtn');
         const status = document.getElementById('status');
         
@@ -690,6 +736,16 @@
             setDirty(true);
         });
         
+        fontSizeSlider.addEventListener('input', (e) => {
+            setFontSizeOffset(e.target.value, false);
+            update(); // Auto-preview
+        });
+        
+        fontSizeSlider.addEventListener('change', (e) => {
+            setFontSizeOffset(e.target.value, false);
+            update(); // Auto-preview
+        });
+        
         Object.values(colorInputs).forEach(input => {
             input.addEventListener('input', () => setDirty(true));
         });
@@ -729,7 +785,21 @@
         
         function adjustFontSize(delta) {
             currentFontSizeOffset = Math.max(minFontSizeOffset, Math.min(maxFontSizeOffset, currentFontSizeOffset + delta));
+            fontSizeSlider.value = currentFontSizeOffset;
+            updateFontSizeDisplay();
             setDirty(true);
+        }
+        
+        function setFontSizeOffset(value, markDirty = true) {
+            currentFontSizeOffset = parseInt(value);
+            updateFontSizeDisplay();
+            if (markDirty) {
+                setDirty(true);
+            }
+        }
+        
+        function updateFontSizeDisplay() {
+            fontSizeValue.textContent = currentFontSizeOffset > 0 ? `+${currentFontSizeOffset}` : currentFontSizeOffset;
         }
         
         // Toggle guides
@@ -799,6 +869,7 @@
         });
         
         // Initialize
+        updateFontSizeDisplay();
         update();
     </script>
 </body>
