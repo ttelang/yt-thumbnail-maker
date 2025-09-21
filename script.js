@@ -3,6 +3,22 @@ let currentLayout = 'b';
 
 // Palettes
 const palettes = {
+    cool: ['#0f172a', '#38bdf8', '#e0f2fe', '#38bdf8', '#06b6d4', '#ffffff'],
+    indigo: ['#1e1b4b', '#6366f1', '#e0e7ff', '#6366f1', '#8b5cf6', '#ffffff'],
+    cyan: ['#164e63', '#67e8f9', '#cffafe', '#06b6d4', '#0891b2', '#ffffff'],
+    teal: ['#134e4a', '#5eead4', '#f0fdfa', '#14b8a6', '#0d9488', '#ffffff'],
+    rose: ['#4c1d24', '#fb7185', '#fff1f2', '#f43f5e', '#e11d48', '#ffffff'],
+    amber: ['#451a03', '#fbbf24', '#fffbeb', '#f59e0b', '#d97706', '#1f2937'],
+    purple: ['#2d1b69', '#a855f7', '#faf5ff', '#a855f7', '#9333ea', '#ffffff'],
+    sunset: ['#431407', '#fb923c', '#fff7ed', '#f97316', '#ea580c', '#ffffff'],
+    emerald: ['#064e3b', '#6ee7b7', '#ecfdf5', '#10b981', '#059669', '#ffffff'],
+    crimson: ['#450a0a', '#f87171', '#fef2f2', '#dc2626', '#b91c1c', '#ffffff'],
+    ocean: ['#0c4a6e', '#7dd3fc', '#f0f9ff', '#0284c7', '#0369a1', '#ffffff'],
+    forest: ['#14532d', '#86efac', '#f0fdf4', '#16a34a', '#15803d', '#ffffff'],
+    neon: ['#0a0a0a', '#00ff88', '#00ff88', '#ff0080', '#00ddff', '#000000'],
+    gold: ['#451a03', '#fcd34d', '#1f2937', '#eab308', '#ca8a04', '#1f2937'],
+    midnight: ['#0f0f23', '#818cf8', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
+    volcano: ['#7c2d12', '#fb923c', '#fef2f2', '#f97316', '#dc2626', '#ffffff'],
     cool: ['#0f172a', '#38bdf8', '#ffffff', '#38bdf8', '#06b6d4', '#ffffff'],
     indigo: ['#1e1b4b', '#6366f1', '#ffffff', '#6366f1', '#8b5cf6', '#ffffff'],
     cyan: ['#164e63', '#67e8f9', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
@@ -20,12 +36,12 @@ const palettes = {
     midnight: ['#0f0f23', '#818cf8', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
     volcano: ['#7c2d12', '#fb923c', '#ffffff', '#f97316', '#dc2626', '#ffffff'],
     // High-contrast and emotional trigger presets
-    urgent: ['#000000', '#ff4444', '#ffffff', '#ff0000', '#ff4444', '#ffffff'],
+    urgent: ['#000000', '#ff4444', '#ffdddd', '#ff0000', '#ff4444', '#ffffff'],
     shock: ['#ffffff', '#000000', '#000000', '#ff0080', '#ff0040', '#ffffff'],
-    warning: ['#1a1a00', '#ffff00', '#ffffff', '#ffff00', '#ffcc00', '#000000'],
-    success: ['#003300', '#00ff00', '#ffffff', '#00ff00', '#00cc00', '#000000'],
+    warning: ['#1a1a00', '#ffff00', '#000000', '#ffff00', '#ffcc00', '#000000'],
+    success: ['#003300', '#00ff00', '#000000', '#00ff00', '#00cc00', '#000000'],
     viral: ['#ff00ff', '#00ffff', '#ffffff', '#00ffff', '#0099ff', '#000000'],
-    mystery: ['#0a0a0a', '#8000ff', '#ffffff', '#8000ff', '#6600cc', '#ffffff']
+    mystery: ['#0a0a0a', '#8000ff', '#f3e8ff', '#8000ff', '#6600cc', '#ffffff']
 };
 
 // Elements
