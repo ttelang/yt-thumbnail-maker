@@ -53,6 +53,13 @@ const elementSizeValue = document.getElementById('elementSizeValue');
 const showDrama = document.getElementById('showDrama');
 const showTextShadow = document.getElementById('showTextShadow');
 
+// Background image elements
+const backgroundUpload = document.getElementById('backgroundUpload');
+const removeBackground = document.getElementById('removeBackground');
+const backgroundOpacity = document.getElementById('backgroundOpacity');
+const backgroundOpacityValue = document.getElementById('backgroundOpacityValue');
+const enableTextOutline = document.getElementById('enableTextOutline');
+
 // Color inputs
 const colorInputs = {
     bg0: document.getElementById('bg0Color'),
@@ -192,36 +199,34 @@ function update() {
         updateVisualElements();
         updateCharacterCounters();
         updateDramaEffects();
+        updateTextVisibility();
     }// Export functions
-function exportSVG() {
-    const svg = document.getElementById('thumb');
-    const serializer = new XMLSerializer();
-    let svgString = serializer.serializeToString(svg);
-    
-    // Add CSS variables to the SVG
-    const style = document.createElement('style');
-    const root = document.documentElement;
-    const cssVars = [
-        `--bg0: ${root.style.getPropertyValue('--bg0') || colorInputs.bg0.value}`,
-        `--bg1: ${root.style.getPropertyValue('--bg1') || colorInputs.bg1.value}`,
-        `--primary: ${root.style.getPropertyValue('--primary') || colorInputs.primary.value}`,
-        `--accent: ${root.style.getPropertyValue('--accent') || colorInputs.accent.value}`,
-        `--pill: ${root.style.getPropertyValue('--pill') || colorInputs.pill.value}`,
-        `--tagText: ${root.style.getPropertyValue('--tagText') || colorInputs.tagText.value}`
-    ].join('; ');
-    
-    svgString = svgString.replace('<svg', `<svg><defs><style>:root { ${cssVars}; }</style></defs><svg`);
-    
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'thumbnail.svg';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function exportPNG() {
+        function exportSVG() {
+            const svg = document.getElementById('thumb');
+            const serializer = new XMLSerializer();
+            let svgString = serializer.serializeToString(svg);
+            
+            // Add CSS variables to the SVG
+            const root = document.documentElement;
+            const cssVars = [
+                `--bg0: ${root.style.getPropertyValue('--bg0') || colorInputs.bg0.value}`,
+                `--bg1: ${root.style.getPropertyValue('--bg1') || colorInputs.bg1.value}`,
+                `--primary: ${root.style.getPropertyValue('--primary') || colorInputs.primary.value}`,
+                `--accent: ${root.style.getPropertyValue('--accent') || colorInputs.accent.value}`,
+                `--pill: ${root.style.getPropertyValue('--pill') || colorInputs.pill.value}`,
+                `--tagText: ${root.style.getPropertyValue('--tagText') || colorInputs.tagText.value}`
+            ].join('; ');
+            
+            svgString = svgString.replace('<svg', `<svg><defs><style>:root { ${cssVars}; }</style></defs><svg`);
+            
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'thumbnail.svg';
+            a.click();
+            URL.revokeObjectURL(url);
+        }function exportPNG() {
     const svg = document.getElementById('thumb');
     const canvas = document.createElement('canvas');
     canvas.width = 1280;
@@ -347,6 +352,80 @@ function setFontSizeOffset(value) {
                 title.removeAttribute('filter');
             }
         });
+    }
+    
+    // Background image functions
+    function handleBackgroundUpload(event) {
+        const file = event.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const backgroundImage = document.getElementById('backgroundImage');
+                const backgroundOverlay = document.getElementById('backgroundOverlay');
+                
+                backgroundImage.setAttribute('href', e.target.result);
+                backgroundImage.style.display = 'block';
+                backgroundOverlay.style.display = 'block';
+                
+                removeBackground.style.display = 'block';
+                updateTextVisibility();
+                update();
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+    
+    function removeBackgroundImage() {
+        const backgroundImage = document.getElementById('backgroundImage');
+        const backgroundOverlay = document.getElementById('backgroundOverlay');
+        
+        backgroundImage.style.display = 'none';
+        backgroundImage.removeAttribute('href');
+        backgroundOverlay.style.display = 'none';
+        
+        removeBackground.style.display = 'none';
+        backgroundUpload.value = '';
+        updateTextVisibility();
+        update();
+    }
+    
+    function updateBackgroundOpacity() {
+        const opacity = backgroundOpacity.value / 100;
+        const backgroundImage = document.getElementById('backgroundImage');
+        const backgroundOverlay = document.getElementById('backgroundOverlay');
+        
+        backgroundOpacityValue.textContent = backgroundOpacity.value;
+        
+        if (backgroundImage) {
+            backgroundImage.style.opacity = opacity;
+        }
+        
+        // Adjust overlay opacity inversely for better text visibility
+        const overlayOpacity = Math.max(0.2, (100 - backgroundOpacity.value) / 200);
+        if (backgroundOverlay) {
+            backgroundOverlay.setAttribute('fill', `rgba(0,0,0,${overlayOpacity})`);
+        }
+    }
+    
+    function updateTextVisibility() {
+        const textElements = document.querySelectorAll('text');
+        const hasBackground = document.getElementById('backgroundImage').style.display !== 'none';
+        
+        textElements.forEach(element => {
+            if (enableTextOutline.checked && hasBackground) {
+                element.setAttribute('filter', 'url(#textOutline)');
+                element.setAttribute('stroke', '#000000');
+                element.setAttribute('stroke-width', '1');
+            } else if (enableTextOutline.checked) {
+                element.setAttribute('filter', 'url(#textShadow)');
+                element.removeAttribute('stroke');
+                element.removeAttribute('stroke-width');
+            } else {
+                element.removeAttribute('filter');
+                element.removeAttribute('stroke');
+                element.removeAttribute('stroke-width');
+            }
+        });
     }// Toggle guides
 function toggleGuides() {
     const guides = document.getElementById('guides');
@@ -398,6 +477,18 @@ fontSizeSlider.addEventListener('change', (e) => {
         });
         
         showTextShadow.addEventListener('change', () => {
+            update(); // Instant update
+        });
+        
+        // Background image event listeners
+        backgroundUpload.addEventListener('change', handleBackgroundUpload);
+        removeBackground.addEventListener('click', removeBackgroundImage);
+        
+        backgroundOpacity.addEventListener('input', () => {
+            updateBackgroundOpacity();
+        });
+        
+        enableTextOutline.addEventListener('change', () => {
             update(); // Instant update
         });// Preset buttons
 document.querySelectorAll('.preset-btn').forEach(btn => {

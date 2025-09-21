@@ -55,6 +55,25 @@
             </div>
 
             <div class="control-section">
+                <h3>Background</h3>
+                <div class="input-group">
+                    <label for="backgroundUpload">Upload Background Image</label>
+                    <input type="file" id="backgroundUpload" accept="image/*">
+                    <button id="removeBackground" style="margin-top: 5px; display: none;">Remove Background</button>
+                </div>
+                <div class="input-group">
+                    <label for="backgroundOpacity">Background Opacity: <span id="backgroundOpacityValue">100</span>%</label>
+                    <input type="range" id="backgroundOpacity" min="10" max="100" value="100" step="5">
+                </div>
+                <div class="input-group">
+                    <div class="element-toggle">
+                        <input type="checkbox" id="enableTextOutline" checked>
+                        <label for="enableTextOutline">Text Outline (for visibility)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-section">
                 <h3>Visual Elements</h3>
                 <div class="visual-elements">
                     <div class="element-toggle">
@@ -177,12 +196,24 @@
                         </linearGradient>
                         <!-- Text shadow filters -->
                         <filter id="textShadow" x="-50%" y="-50%" width="200%" height="200%">
-                            <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.5)"/>
+                            <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.8)"/>
                         </filter>
                         <filter id="textGlow" x="-50%" y="-50%" width="200%" height="200%">
                             <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                             <feMerge> 
                                 <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <!-- Enhanced text outline filter -->
+                        <filter id="textOutline" x="-50%" y="-50%" width="200%" height="200%">
+                            <feMorphology operator="dilate" radius="2" result="outline"/>
+                            <feFlood flood-color="#000000" flood-opacity="0.8" result="outlineColor"/>
+                            <feComposite in="outlineColor" in2="outline" operator="in" result="coloredOutline"/>
+                            <feDropShadow dx="1" dy="1" stdDeviation="2" flood-color="rgba(0,0,0,0.9)" result="shadow"/>
+                            <feMerge>
+                                <feMergeNode in="shadow"/>
+                                <feMergeNode in="coloredOutline"/>
                                 <feMergeNode in="SourceGraphic"/>
                             </feMerge>
                         </filter>
@@ -195,6 +226,12 @@
                     
                     <!-- Background -->
                     <rect width="1280" height="720" fill="url(#bgGradient)" />
+                    
+                    <!-- Background Image -->
+                    <image id="backgroundImage" x="0" y="0" width="1280" height="720" style="display: none;" preserveAspectRatio="xMidYMid slice" />
+                    
+                    <!-- Background Overlay for text visibility -->
+                    <rect id="backgroundOverlay" width="1280" height="720" fill="rgba(0,0,0,0.3)" style="display: none;" />
                     
                     <!-- Dramatic overlay -->
                     <rect id="dramaticOverlay" width="1280" height="720" fill="url(#spotlightGradient)" style="display: none;" />
