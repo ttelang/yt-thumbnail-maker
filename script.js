@@ -3,29 +3,29 @@ let currentLayout = 'b';
 
 // Palettes
 const palettes = {
-    cool: ['#0f172a', '#1e293b', '#ffffff', '#38bdf8', '#06b6d4', '#ffffff'],
-    indigo: ['#1e1b4b', '#312e81', '#ffffff', '#6366f1', '#8b5cf6', '#ffffff'],
-    cyan: ['#164e63', '#155e75', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
-    teal: ['#134e4a', '#115e59', '#ffffff', '#14b8a6', '#0d9488', '#ffffff'],
-    rose: ['#4c1d24', '#881337', '#ffffff', '#f43f5e', '#e11d48', '#ffffff'],
-    amber: ['#451a03', '#92400e', '#ffffff', '#f59e0b', '#d97706', '#ffffff'],
-    purple: ['#2d1b69', '#4c1d95', '#ffffff', '#a855f7', '#9333ea', '#ffffff'],
-    sunset: ['#431407', '#9a3412', '#ffffff', '#f97316', '#ea580c', '#ffffff'],
-    emerald: ['#064e3b', '#065f46', '#ffffff', '#10b981', '#059669', '#ffffff'],
-    crimson: ['#450a0a', '#7f1d1d', '#ffffff', '#dc2626', '#b91c1c', '#ffffff'],
-    ocean: ['#0c4a6e', '#075985', '#ffffff', '#0284c7', '#0369a1', '#ffffff'],
-    forest: ['#14532d', '#166534', '#ffffff', '#16a34a', '#15803d', '#ffffff'],
-    neon: ['#0a0a0a', '#171717', '#00ff88', '#ff0080', '#00ddff', '#000000'],
-    gold: ['#451a03', '#78350f', '#ffffff', '#eab308', '#ca8a04', '#1f2937'],
-    midnight: ['#0f0f23', '#1a1a2e', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
-    volcano: ['#7c2d12', '#9a3412', '#ffffff', '#f97316', '#dc2626', '#ffffff'],
+    cool: ['#0f172a', '#38bdf8', '#ffffff', '#38bdf8', '#06b6d4', '#ffffff'],
+    indigo: ['#1e1b4b', '#6366f1', '#ffffff', '#6366f1', '#8b5cf6', '#ffffff'],
+    cyan: ['#164e63', '#67e8f9', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
+    teal: ['#134e4a', '#5eead4', '#ffffff', '#14b8a6', '#0d9488', '#ffffff'],
+    rose: ['#4c1d24', '#fb7185', '#ffffff', '#f43f5e', '#e11d48', '#ffffff'],
+    amber: ['#451a03', '#fbbf24', '#ffffff', '#f59e0b', '#d97706', '#ffffff'],
+    purple: ['#2d1b69', '#a855f7', '#ffffff', '#a855f7', '#9333ea', '#ffffff'],
+    sunset: ['#431407', '#fb923c', '#ffffff', '#f97316', '#ea580c', '#ffffff'],
+    emerald: ['#064e3b', '#6ee7b7', '#ffffff', '#10b981', '#059669', '#ffffff'],
+    crimson: ['#450a0a', '#f87171', '#ffffff', '#dc2626', '#b91c1c', '#ffffff'],
+    ocean: ['#0c4a6e', '#7dd3fc', '#ffffff', '#0284c7', '#0369a1', '#ffffff'],
+    forest: ['#14532d', '#86efac', '#ffffff', '#16a34a', '#15803d', '#ffffff'],
+    neon: ['#0a0a0a', '#00ff88', '#00ff88', '#ff0080', '#00ddff', '#000000'],
+    gold: ['#451a03', '#fcd34d', '#ffffff', '#eab308', '#ca8a04', '#1f2937'],
+    midnight: ['#0f0f23', '#818cf8', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
+    volcano: ['#7c2d12', '#fb923c', '#ffffff', '#f97316', '#dc2626', '#ffffff'],
     // High-contrast and emotional trigger presets
-    urgent: ['#000000', '#1a0000', '#ffffff', '#ff0000', '#ff4444', '#ffffff'],
-    shock: ['#ffffff', '#f8f8f8', '#000000', '#ff0080', '#ff0040', '#ffffff'],
-    warning: ['#1a1a00', '#333300', '#ffffff', '#ffff00', '#ffcc00', '#000000'],
-    success: ['#003300', '#004400', '#ffffff', '#00ff00', '#00cc00', '#000000'],
-    viral: ['#ff00ff', '#cc00cc', '#ffffff', '#00ffff', '#0099ff', '#000000'],
-    mystery: ['#0a0a0a', '#1a0a1a', '#ffffff', '#8000ff', '#6600cc', '#ffffff']
+    urgent: ['#000000', '#ff4444', '#ffffff', '#ff0000', '#ff4444', '#ffffff'],
+    shock: ['#ffffff', '#000000', '#000000', '#ff0080', '#ff0040', '#ffffff'],
+    warning: ['#1a1a00', '#ffff00', '#ffffff', '#ffff00', '#ffcc00', '#000000'],
+    success: ['#003300', '#00ff00', '#ffffff', '#00ff00', '#00cc00', '#000000'],
+    viral: ['#ff00ff', '#00ffff', '#ffffff', '#00ffff', '#0099ff', '#000000'],
+    mystery: ['#0a0a0a', '#8000ff', '#ffffff', '#8000ff', '#6600cc', '#ffffff']
 };
 
 // Elements
@@ -142,9 +142,23 @@ function updatePill(layout) {
     const pillEl = document.getElementById(`tagPill-${layout}`);
     const tagEl = document.getElementById(`tag-${layout}`);
     
-    // Measure text
-    const textWidth = getTextWidth(tag, 18, '600');
-    const pillWidth = textWidth + 32; // 16px padding on each side
+    // Measure text - for longer text, use smaller font size
+    const maxWidth = 300; // Maximum pill width to avoid overlapping content
+    let fontSize = 18;
+    let fontWeight = '600';
+    
+    // Dynamically adjust font size for long text
+    let textWidth = getTextWidth(tag, fontSize, fontWeight);
+    if (textWidth > maxWidth - 32) { // Account for padding
+        fontSize = 16;
+        textWidth = getTextWidth(tag, fontSize, fontWeight);
+        if (textWidth > maxWidth - 32) {
+            fontSize = 14;
+            textWidth = getTextWidth(tag, fontSize, fontWeight);
+        }
+    }
+    
+    const pillWidth = Math.min(textWidth + 32, maxWidth); // 16px padding on each side
     const pillHeight = 40;
     const pillX = 1160 - pillWidth; // Right-align to safe area
     const pillY = 40;
@@ -152,6 +166,9 @@ function updatePill(layout) {
     // Update pill
     pillEl.setAttribute('x', pillX);
     pillEl.setAttribute('width', pillWidth);
+    
+    // Update text font size
+    tagEl.setAttribute('font-size', fontSize);
     
     // Center text in pill
     const textX = pillX + pillWidth / 2;
@@ -396,7 +413,7 @@ function setFontSizeOffset(value) {
     function updateCharacterCounters() {
         updateCounter('titleInput', 'titleCounter', 40, 20);
         updateCounter('subtitleInput', 'subtitleCounter', 60, 40);
-        updateCounter('tagInput', 'tagCounter', 12, 8);
+        updateCounter('tagInput', 'tagCounter', 64, 48);
     }
     
     function updateCounter(inputId, counterId, maxChars, warningThreshold) {
