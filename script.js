@@ -201,43 +201,86 @@ function update() {
         updateCharacterCounters();
         updateDramaEffects();
         updateTextVisibility();
-    }// Export functions
-        function exportSVG() {
-            const svg = document.getElementById('thumb');
-            const serializer = new XMLSerializer();
-            let svgString = serializer.serializeToString(svg);
-            
-            // Add CSS variables to the SVG
-            const root = document.documentElement;
-            const cssVars = [
-                `--bg0: ${root.style.getPropertyValue('--bg0') || colorInputs.bg0.value}`,
-                `--bg1: ${root.style.getPropertyValue('--bg1') || colorInputs.bg1.value}`,
-                `--primary: ${root.style.getPropertyValue('--primary') || colorInputs.primary.value}`,
-                `--accent: ${root.style.getPropertyValue('--accent') || colorInputs.accent.value}`,
-                `--pill: ${root.style.getPropertyValue('--pill') || colorInputs.pill.value}`,
-                `--tagText: ${root.style.getPropertyValue('--tagText') || colorInputs.tagText.value}`
-            ].join('; ');
-            
-            svgString = svgString.replace('<svg', `<svg><defs><style>:root { ${cssVars}; }</style></defs><svg`);
-            
-            const blob = new Blob([svgString], { type: 'image/svg+xml' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'thumbnail.svg';
-            a.click();
-            URL.revokeObjectURL(url);
-        }function exportPNG() {
+    }
+    
+    // Export functions
+    function exportSVG() {
+        // Ensure everything is up to date before export
+        update();
+        
+        const svg = document.getElementById('thumb');
+        const svgClone = svg.cloneNode(true);
+        
+        // Apply current CSS variables
+        const root = document.documentElement;
+        const cssVars = {
+            '--bg0': root.style.getPropertyValue('--bg0') || colorInputs.bg0.value,
+            '--bg1': root.style.getPropertyValue('--bg1') || colorInputs.bg1.value,
+            '--primary': root.style.getPropertyValue('--primary') || colorInputs.primary.value,
+            '--accent': root.style.getPropertyValue('--accent') || colorInputs.accent.value,
+            '--pill': root.style.getPropertyValue('--pill') || colorInputs.pill.value,
+            '--tagText': root.style.getPropertyValue('--tagText') || colorInputs.tagText.value
+        };
+        
+        // Handle background image properly in the cloned SVG
+        const originalBgImage = svg.querySelector('#backgroundImage');
+        const clonedBgImage = svgClone.querySelector('#backgroundImage');
+        if (originalBgImage && clonedBgImage && originalBgImage.getAttribute('href')) {
+            clonedBgImage.setAttribute('href', originalBgImage.getAttribute('href'));
+            clonedBgImage.style.display = originalBgImage.style.display;
+            clonedBgImage.style.opacity = originalBgImage.style.opacity;
+        }
+        
+        // Create style element
+        const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+        const cssVarString = Object.entries(cssVars)
+            .map(([key, value]) => `${key}: ${value}`)
+            .join('; ');
+        style.textContent = `:root { ${cssVarString}; }`;
+        
+        // Insert style into defs
+        const defs = svgClone.querySelector('defs');
+        if (defs) {
+            defs.insertBefore(style, defs.firstChild);
+        }
+        
+        // Serialize and replace CSS variables as fallback
+        const serializer = new XMLSerializer();
+        let svgString = serializer.serializeToString(svgClone);
+        
+        Object.entries(cssVars).forEach(([variable, value]) => {
+            const regex = new RegExp(`var\\(${variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`, 'g');
+            svgString = svgString.replace(regex, value);
+        });
+        
+        // Ensure proper namespace
+        if (!svgString.includes('xmlns="http://www.w3.org/2000/svg"')) {
+            svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+        
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'thumbnail.svg';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+        
+        function exportPNG() {
+    // Ensure everything is up to date before export
+    update();
+    
     const svg = document.getElementById('thumb');
     const canvas = document.createElement('canvas');
     canvas.width = 1280;
     canvas.height = 720;
     const ctx = canvas.getContext('2d');
     
-    const serializer = new XMLSerializer();
-    let svgString = serializer.serializeToString(svg);
+    // Clone the SVG to avoid modifying the original
+    const svgClone = svg.cloneNode(true);
     
-    // Inline styles
+    // Apply current CSS variables directly to the cloned SVG
     const root = document.documentElement;
     const cssVars = {
         '--bg0': root.style.getPropertyValue('--bg0') || colorInputs.bg0.value,
@@ -248,14 +291,60 @@ function update() {
         '--tagText': root.style.getPropertyValue('--tagText') || colorInputs.tagText.value
     };
     
+    // Handle background image properly in the cloned SVG
+    const originalBgImage = svg.querySelector('#backgroundImage');
+    const clonedBgImage = svgClone.querySelector('#backgroundImage');
+    if (originalBgImage && clonedBgImage && originalBgImage.getAttribute('href')) {
+        clonedBgImage.setAttribute('href', originalBgImage.getAttribute('href'));
+        clonedBgImage.style.display = originalBgImage.style.display;
+        clonedBgImage.style.opacity = originalBgImage.style.opacity;
+    }
+    
+    // Create a style element with CSS variables
+    const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+    style.textContent = `
+        :root {
+            --bg0: ${cssVars['--bg0']};
+            --bg1: ${cssVars['--bg1']};
+            --primary: ${cssVars['--primary']};
+            --accent: ${cssVars['--accent']};
+            --pill: ${cssVars['--pill']};
+            --tagText: ${cssVars['--tagText']};
+        }
+    `;
+    
+    // Insert style at the beginning of defs
+    const defs = svgClone.querySelector('defs');
+    if (defs) {
+        defs.insertBefore(style, defs.firstChild);
+    }
+    
+    // Serialize the modified SVG
+    const serializer = new XMLSerializer();
+    let svgString = serializer.serializeToString(svgClone);
+    
+    // Replace CSS variables with actual values as fallback
     Object.entries(cssVars).forEach(([variable, value]) => {
         const regex = new RegExp(`var\\(${variable.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\)`, 'g');
         svgString = svgString.replace(regex, value);
     });
     
+    // Ensure proper SVG namespace and encoding
+    if (!svgString.includes('xmlns="http://www.w3.org/2000/svg"')) {
+        svgString = svgString.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+    }
+    
     const img = new Image();
+    img.crossOrigin = 'anonymous';
+    
     img.onload = function() {
+        // Clear canvas with white background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, 1280, 720);
+        
+        // Draw the SVG
         ctx.drawImage(img, 0, 0, 1280, 720);
+        
         canvas.toBlob(function(blob) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -263,12 +352,23 @@ function update() {
             a.download = 'thumbnail.png';
             a.click();
             URL.revokeObjectURL(url);
-        });
+        }, 'image/png', 1.0);
     };
     
-    const blob = new Blob([svgString], { type: 'image/svg+xml' });
+    img.onerror = function(error) {
+        console.error('Error loading SVG for PNG export:', error);
+        alert('Error exporting PNG. Please try again.');
+    };
+    
+    // Create blob and load image
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     img.src = url;
+    
+    // Clean up URL after a delay
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 1000);
 }
 
 // Font size adjustment
