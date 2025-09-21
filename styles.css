@@ -116,10 +116,10 @@ body {
 
 .input-group input[type="range"]::-webkit-slider-track {
     height: 8px;
-    background: #666 !important;
+    background: linear-gradient(to bottom, #333, #000, #333) !important;
     border-radius: 4px;
-    border: 2px solid #888 !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.9) !important;
     cursor: pointer;
 }
 
@@ -139,10 +139,10 @@ body {
 
 .input-group input[type="range"]::-moz-range-track {
     height: 8px;
-    background: #666 !important;
+    background: linear-gradient(to bottom, #333, #000, #333) !important;
     border-radius: 4px;
-    border: 2px solid #888 !important;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.9) !important;
     cursor: pointer;
 }
 
@@ -181,21 +181,23 @@ body {
     border-radius: 6px !important;
 }
 
-/* Force visible slider track with maximum contrast */
+/* Force visible slider track with dark line */
 input[type="range"] {
-    background: linear-gradient(to right, #444 0%, #444 100%) !important;
-    border: 2px solid #aaa !important;
+    background: linear-gradient(to right, #222 0%, #222 100%) !important;
+    border: 2px solid #000 !important;
     border-radius: 8px !important;
     height: 16px !important;
     padding: 2px !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.8) !important;
 }
 
-/* Additional styling to ensure track visibility */
+/* Additional styling to ensure track visibility with dark line */
 input[type="range"]::-webkit-slider-runnable-track {
-    background: #666 !important;
+    background: linear-gradient(to bottom, #333, #111, #333) !important;
     height: 8px !important;
     border-radius: 4px !important;
-    border: 1px solid #999 !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.9) !important;
 }
 
 input[type="range"]::-moz-range-progress {
@@ -216,25 +218,25 @@ input[type="range"]::-moz-range-progress {
     height: 12px !important;
 }
 
-/* Specific track styling for all sliders */
+/* Specific track styling for all sliders with dark line */
 .font-size-slider::-webkit-slider-track,
 .element-size-slider::-webkit-slider-track,
 input[type="range"]::-webkit-slider-track {
     height: 8px !important;
-    background: #777 !important;
+    background: linear-gradient(to bottom, #444, #000, #444) !important;
     border-radius: 4px !important;
-    border: 1px solid #999 !important;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6) !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.9) !important;
 }
 
 .font-size-slider::-moz-range-track,
 .element-size-slider::-moz-range-track,
 input[type="range"]::-moz-range-track {
     height: 8px !important;
-    background: #777 !important;
+    background: linear-gradient(to bottom, #444, #000, #444) !important;
     border-radius: 4px !important;
-    border: 1px solid #999 !important;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,0.6) !important;
+    border: 2px solid #000 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.9) !important;
 }
 
 /* Additional debug styling for the container */
