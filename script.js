@@ -488,8 +488,8 @@ function setFontSizeOffset(value) {
     
     // Character counter functions
     function updateCharacterCounters() {
-        updateCounter('titleInput', 'titleCounter', 40, 20);
-        updateCounter('subtitleInput', 'subtitleCounter', 60, 40);
+        updateCounter('titleInput', 'titleCounter', 100, 80);
+        updateCounter('subtitleInput', 'subtitleCounter', 100, 80);
         updateCounter('tagInput', 'tagCounter', 64, 48);
     }
     
