@@ -100,6 +100,10 @@ function getTextWidth(text, fontSize, fontWeight = 'normal') {
 function autofitTitle(layout) {
     const titleEl = document.getElementById(`title-${layout}`);
     const subtitleEl = document.getElementById(`subtitle-${layout}`);
+    
+    // Exit early if elements don't exist
+    if (!titleEl) return;
+    
     const title = titleInput.value;
     let fontSize;
     if (layout === 'b') fontSize = 80 + currentFontSizeOffset;
@@ -122,19 +126,23 @@ function autofitTitle(layout) {
     
     titleEl.setAttribute('font-size', fontSize);
     
-    // Calculate proportional subtitle size (typically 40-45% of title size)
-    const subtitleBaseFontSize = layout === 'b' ? 36 : 32;
-    const subtitleFontSize = Math.max(16, Math.min(60, subtitleBaseFontSize + (currentFontSizeOffset * 0.45)));
-    subtitleEl.setAttribute('font-size', subtitleFontSize);
+    // Calculate proportional subtitle size (only if subtitle element exists)
+    if (subtitleEl) {
+        const subtitleBaseFontSize = layout === 'b' ? 36 : 32;
+        const subtitleFontSize = Math.max(16, Math.min(60, subtitleBaseFontSize + (currentFontSizeOffset * 0.45)));
+        subtitleEl.setAttribute('font-size', subtitleFontSize);
+    }
     
     // Update underline width for Layout B
     if (layout === 'b') {
         const underline = document.getElementById('titleUnderline-b');
-        const titleWidth = getTextWidth(title, fontSize, '700');
-        const underlineWidth = Math.min(Math.max(titleWidth, 200), 760);
-        const underlineX = 580 - underlineWidth / 2;
-        underline.setAttribute('x', underlineX);
-        underline.setAttribute('width', underlineWidth);
+        if (underline) {
+            const titleWidth = getTextWidth(title, fontSize, '700');
+            const underlineWidth = Math.min(Math.max(titleWidth, 200), 760);
+            const underlineX = 580 - underlineWidth / 2;
+            underline.setAttribute('x', underlineX);
+            underline.setAttribute('width', underlineWidth);
+        }
     }
 }
 
@@ -143,6 +151,9 @@ function updatePill(layout) {
     const tag = tagInput.value || 'TAG';
     const pillEl = document.getElementById(`tagPill-${layout}`);
     const tagEl = document.getElementById(`tag-${layout}`);
+    
+    // Exit early if elements don't exist
+    if (!pillEl || !tagEl) return;
     
     // Measure text - for longer text, use smaller font size
     const maxWidth = 300; // Maximum pill width to avoid overlapping content
@@ -198,25 +209,32 @@ function updatePill(layout) {
         
         ['a', 'b', 'c', 'd'].forEach(layout => {
             // Update title
-            document.getElementById(`title-${layout}`).textContent = title;
+            const titleEl = document.getElementById(`title-${layout}`);
+            if (titleEl) titleEl.textContent = title;
             
             // Update subtitle (except for layout D which has special handling)
             if (layout !== 'd') {
-                document.getElementById(`subtitle-${layout}`).textContent = subtitle;
+                const subtitleEl = document.getElementById(`subtitle-${layout}`);
+                if (subtitleEl) subtitleEl.textContent = subtitle;
             }
             
             // Update brand
-            document.getElementById(`brand-${layout}`).textContent = brand;
+            const brandEl = document.getElementById(`brand-${layout}`);
+            if (brandEl) brandEl.textContent = brand;
             
             // Update tag/pill text
-            document.getElementById(`tag-${layout}`).textContent = tag || 'TUTORIAL';
+            const tagEl = document.getElementById(`tag-${layout}`);
+            if (tagEl) tagEl.textContent = tag || 'TUTORIAL';
         });
         
         // Special handling for Layout D subtitle (urgency message)
-        if (subtitle.trim()) {
-            document.getElementById('subtitle-d').textContent = subtitle.toUpperCase() + ' - DON\'T MISS OUT!';
-        } else {
-            document.getElementById('subtitle-d').textContent = 'WATCH BEFORE IT\'S TOO LATE!';
+        const subtitleDEl = document.getElementById('subtitle-d');
+        if (subtitleDEl) {
+            if (subtitle.trim()) {
+                subtitleDEl.textContent = subtitle.toUpperCase() + ' - DON\'T MISS OUT!';
+            } else {
+                subtitleDEl.textContent = 'WATCH BEFORE IT\'S TOO LATE!';
+            }
         }
     }
 
@@ -900,11 +918,22 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Initialize
-updateFontSizeDisplay();
+// Initialize when DOM is ready
+function initialize() {
+    updateFontSizeDisplay();
+    
+    // Debug: Check if key elements exist
+    console.log('Font size slider:', fontSizeSlider);
+    console.log('Font size value:', fontSizeValue);
+    console.log('Title input:', titleInput);
+    console.log('Layout select:', layoutSelect);
+    
+    update();
+}
 
-// Debug: Check if slider elements exist
-console.log('Font size slider:', fontSizeSlider);
-console.log('Font size value:', fontSizeValue);
-
-update();
+// Ensure DOM is loaded before initializing
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+} else {
+    initialize();
+}
