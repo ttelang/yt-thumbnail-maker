@@ -182,37 +182,50 @@ function updatePill(layout) {
 }
 
 // Update layout visibility
-        function updateLayoutVisibility() {
-            ['a', 'b', 'c', 'd'].forEach(layout => {
-                const el = document.getElementById(`layout-${layout}`);
-                el.style.display = layout === currentLayout ? 'block' : 'none';
-            });
-        }// Update content
-        function updateContent() {
-            const title = titleInput.value;
-            const subtitle = subtitleInput.value;
-            const brand = brandInput.value;
+    function updateLayoutVisibility() {
+        ['a', 'b', 'c', 'd'].forEach(layout => {
+            const el = document.getElementById(`layout-${layout}`);
+            el.style.display = layout === currentLayout ? 'block' : 'none';
+        });
+    }
+
+    // Update content
+    function updateContent() {
+        const title = titleInput.value;
+        const subtitle = subtitleInput.value;
+        const brand = brandInput.value;
+        const tag = tagInput.value;
+        
+        ['a', 'b', 'c', 'd'].forEach(layout => {
+            // Update title
+            document.getElementById(`title-${layout}`).textContent = title;
             
-            ['a', 'b', 'c', 'd'].forEach(layout => {
-                document.getElementById(`title-${layout}`).textContent = title;
-                if (layout !== 'd') {
-                    document.getElementById(`subtitle-${layout}`).textContent = subtitle;
-                }
-                document.getElementById(`brand-${layout}`).textContent = brand;
-            });
-            
-            // Special handling for Layout D subtitle (urgency message)
-            if (subtitle.trim()) {
-                document.getElementById('subtitle-d').textContent = subtitle.toUpperCase() + ' - DON\'T MISS OUT!';
-            } else {
-                document.getElementById('subtitle-d').textContent = 'WATCH BEFORE IT\'S TOO LATE!';
+            // Update subtitle (except for layout D which has special handling)
+            if (layout !== 'd') {
+                document.getElementById(`subtitle-${layout}`).textContent = subtitle;
             }
-        }// Main update function
-function update() {
-    applyCSSVariables();
-    updateContent();
-    updateLayoutVisibility();
-    
+            
+            // Update brand
+            document.getElementById(`brand-${layout}`).textContent = brand;
+            
+            // Update tag/pill text
+            document.getElementById(`tag-${layout}`).textContent = tag || 'TUTORIAL';
+        });
+        
+        // Special handling for Layout D subtitle (urgency message)
+        if (subtitle.trim()) {
+            document.getElementById('subtitle-d').textContent = subtitle.toUpperCase() + ' - DON\'T MISS OUT!';
+        } else {
+            document.getElementById('subtitle-d').textContent = 'WATCH BEFORE IT\'S TOO LATE!';
+        }
+    }
+
+    // Main update function
+    function update() {
+        applyCSSVariables();
+        updateContent();
+        updateLayoutVisibility();
+        
         // Update title sizing and pill for current layout
         autofitTitle(currentLayout);
         updatePill(currentLayout);
