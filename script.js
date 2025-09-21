@@ -19,22 +19,6 @@ const palettes = {
     gold: ['#451a03', '#fcd34d', '#1f2937', '#eab308', '#ca8a04', '#1f2937'],
     midnight: ['#0f0f23', '#818cf8', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
     volcano: ['#7c2d12', '#fb923c', '#fef2f2', '#f97316', '#dc2626', '#ffffff'],
-    cool: ['#0f172a', '#38bdf8', '#ffffff', '#38bdf8', '#06b6d4', '#ffffff'],
-    indigo: ['#1e1b4b', '#6366f1', '#ffffff', '#6366f1', '#8b5cf6', '#ffffff'],
-    cyan: ['#164e63', '#67e8f9', '#ffffff', '#06b6d4', '#0891b2', '#ffffff'],
-    teal: ['#134e4a', '#5eead4', '#ffffff', '#14b8a6', '#0d9488', '#ffffff'],
-    rose: ['#4c1d24', '#fb7185', '#ffffff', '#f43f5e', '#e11d48', '#ffffff'],
-    amber: ['#451a03', '#fbbf24', '#ffffff', '#f59e0b', '#d97706', '#ffffff'],
-    purple: ['#2d1b69', '#a855f7', '#ffffff', '#a855f7', '#9333ea', '#ffffff'],
-    sunset: ['#431407', '#fb923c', '#ffffff', '#f97316', '#ea580c', '#ffffff'],
-    emerald: ['#064e3b', '#6ee7b7', '#ffffff', '#10b981', '#059669', '#ffffff'],
-    crimson: ['#450a0a', '#f87171', '#ffffff', '#dc2626', '#b91c1c', '#ffffff'],
-    ocean: ['#0c4a6e', '#7dd3fc', '#ffffff', '#0284c7', '#0369a1', '#ffffff'],
-    forest: ['#14532d', '#86efac', '#ffffff', '#16a34a', '#15803d', '#ffffff'],
-    neon: ['#0a0a0a', '#00ff88', '#00ff88', '#ff0080', '#00ddff', '#000000'],
-    gold: ['#451a03', '#fcd34d', '#ffffff', '#eab308', '#ca8a04', '#1f2937'],
-    midnight: ['#0f0f23', '#818cf8', '#e2e8f0', '#4f46e5', '#3730a3', '#ffffff'],
-    volcano: ['#7c2d12', '#fb923c', '#ffffff', '#f97316', '#dc2626', '#ffffff'],
     // High-contrast and emotional trigger presets
     urgent: ['#000000', '#ff4444', '#ffdddd', '#ff0000', '#ff4444', '#ffffff'],
     shock: ['#ffffff', '#000000', '#000000', '#ff0080', '#ff0040', '#ffffff'],
@@ -798,26 +782,38 @@ textRotationSlider.addEventListener('change', (e) => {
             update(); // Instant update
         });
 
-        showMobilePreview.addEventListener('change', toggleMobilePreview);// Preset buttons
+        showMobilePreview.addEventListener('change', toggleMobilePreview);
+
+// Preset buttons
 document.querySelectorAll('.preset-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
         const preset = btn.dataset.preset;
         let colors;
+        
+        console.log('Preset clicked:', preset); // Debug log
         
         if (preset === 'random') {
             const presetNames = Object.keys(palettes);
             const randomPreset = presetNames[Math.floor(Math.random() * presetNames.length)];
             colors = palettes[randomPreset];
+            console.log('Random preset selected:', randomPreset, colors); // Debug log
         } else {
             colors = palettes[preset];
+            console.log('Preset colors:', colors); // Debug log
         }
         
         if (colors) {
             const colorKeys = ['bg0', 'bg1', 'primary', 'accent', 'pill', 'tagText'];
             colors.forEach((color, index) => {
-                colorInputs[colorKeys[index]].value = color;
+                if (colorInputs[colorKeys[index]]) {
+                    colorInputs[colorKeys[index]].value = color;
+                    console.log(`Set ${colorKeys[index]} to ${color}`); // Debug log
+                }
             });
             update(); // Instant update
+        } else {
+            console.warn('Preset not found:', preset);
         }
     });
 });
